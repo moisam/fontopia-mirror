@@ -1,1 +1,219 @@
+.\" Manpage for fontopia, the console font editor.
+.\" Contact mohammed_isam1984@yahoo.com for feedback/suggestions.
+.TH fontopia 1 "JUL 2024" "2.0" "fontopia man page"
+.SH NAME
+fontopia \- the console bitmap font editor
+.SH SYNOPSIS
+.B fontopia [OPTIONS] [file-name]
+.SH DESCRIPTION
+Fontopia is an easy-to-use, text-based, console font editor.
+What this means in simple English is that you can edit the fonts
+that your GNU/Linux kernel is using to display your text on
+text-based (vs graphical) terminals.
 
+Unlike other console text editors which usually work on one PSF
+version, or work on unicode tables only, or allow very minimal glyph
+editing, fontopia provides all these functions together:
+.br
+- It works on both PSF 1 & 2, you can even change file type and save
+it to disk in the other version.
+.br
+- It allows exporting and importing of unicode tables from external
+files.
+.br
+- It provides a user-friendly, easy-to-use glyph editor.
+.br
+- It can easily change font metrics, e.g. length, width, height...
+.br
+
+Console font files are commonly of PSF type (of which there are two
+versions), or of CP type (legacy fonts). Fontopia works with PSF files
+of both versions, as well as CP, PCF, BDF files and raw font files.
+.br
+
+What's new:
+.br
+===========
+.br
+- We added the facility to export glyph data to a C source file as an array.
+.br
+- Work is ongoing on Windows FON and FNT files.
+.br
+- We added the Extended Glyph Operations window (accessed by pressing O) 
+and the Glyph Info window (accessed by pressing G).
+.br
+
+Package dependencies:
+.br
+=====================
+.br
+Fontopia needs the GnuDOS and ncurses packages in order to run. Furthermore, 
+if you are going to compile Fontopia from the source, you will need the 
+following header files: dialogs.h, kbd.h and screen.h. These files are part of
+the GnuDOS package. If you don't have GnuDOS installed on your system, 
+you can download the sources from https://ftp.gnu.org/gnu/gnudos/, 
+compile and install them, then retry running or compiling Fontopia.
+.br
+
+Alternatively, if you are using an RPM-based distro, you can download and 
+install the RPM from places like: https://pkgs.org/download/gnudos.
+Additionally, Fedora, CentOS and RHEL users can use yum/dnf to install 
+GnuDOS from the official repos. (Note: if you are installing GnuDOS 
+from an RPM repo, and you want to compile Fontopia from the source, you 
+will need to install the 'gnudos-devel' package in addition to the 'gnudos' 
+package. The former package includes the above header files, which are 
+needed to compile Fontopia from source).
+.br
+
+Supported formats:
+.br
+==================
+.br
+- PSF 1 and 2
+.br
+- Linux Code pages (CP)
+.br
+- Raw fonts
+.br
+- BDF fonts (beta)
+.br
+- PCF fonts
+.br
+- Windows FON & FNT files support under development
+.br
+
+WARNING:
+.br
+========
+.br
+(1) There is a major downside currently: fontopia doesn't work with unicode
+sequences properly (at least not in all cases). If you export a unicode
+table, edit it, and then import it to a font file, you should be safe.
+.br
+(2) Note that if you changed the font version from CP to any other version,
+only the ACTIVE font will be changed, as the other font formats (PSF,
+Raw, BDF) don't support multiple fonts inside the same font file. In this
+case, you will need to open the original CP file multiple times, every
+time select a different font size (by using '1'-'4' number keys) and
+convert to the new font version, then reopen the original CP file, select
+another font size, convert it, and so on.
+.br
+
+Navigation:
+.br
+===========
+.br
+Using the editor is very easy:
+.br
+(1)  Navigate the glyphs on the right side window using the arrow keys.
+ Edit a single glyph using ENTER (or TAB).
+.br
+(2)  Navigate the bits that form a single bit (on the left side window)
+ using arrow keys. Press ENTER or SPACE to set/unset the desired bit.
+ Go back to right window (glyph list) using TAB.
+.br
+(3)  To zoom in (make the glyph on the left look bigger), press Z.
+.br
+(4)  To zoom out, press X.
+.br
+(5)  To open a new file, press CTRL+O.
+.br
+(6)  To create a new font from scratch, press CTRL+N.
+.br
+(7)  To save your work, press CTRL+S.
+.br
+(8)  To save with a new filename, press CTRL+D (aka Save As..).
+.br
+(9)  To quit the editor, press CTRL+Q.
+.br
+(10) To show help, press CTRL+H.
+.br
+(11) To copy a glyph, press CTRL+C.
+.br
+(12) To cut a glyph, press CTRL+X.
+.br
+(13) To paste a glyph, press CTRL+V.
+.br
+(14) To show about dialog box, press A.
+.br
+(15) To switch buffer mode (on/off), press CTRL+B.
+.br
+(16) To clear a glyph (i.e. remove all bits), press C.
+.br
+(17) To invert a glyph, press D.
+.br
+(18) To export font unicode table (by default to a file with same original
+ file name plus .tab extension), press E.
+.br
+(19) To show glyph info, press G.
+.br
+(20) To flip a glyph horizontally, press H.
+.br
+(21) To import unicode table from another file, press I.
+.br
+(22) To show these keys without the extra jargon, press K.
+.br
+(23) To show font metrics window, press M.
+.br
+(24) To show the extended glyph operations window, press O.
+.br
+(25) To change codepage of a CP font, press P.
+     If font is in BDF format, P shows properties (or metadata).
+.br
+(26) To remove unicode table from font, press CTRL+R.
+.br
+(27) To set a glyph (i.e. set all bits), press S.
+.br
+(28) To show font unicode table, press U.
+.br
+(29) To flip a glyph vertically, press V.
+.br
+(30) To export font glyphs in textual format (by default to a file with
+     same original file name plus .glyph extension), press W.
+     You can alternatively export glyphs to a C source file by pressing CTRL+W.
+.br
+(31) If editing a CP font and you want to change the active font (e.g.
+     edit the 8x8 font instead of the 16x8 font you are currently editing)
+     press any key from '1' to '4' and the respective font will be the
+     active font to be edited. You can go back and forth by using the
+     number keys.
+.br
+
+The unicode values that are mapped to a specific glyph are shown on the
+status bar (the bottom strip) to the right side.
+.br
+
+That should make you ready to move around and edit your fonts. Have fun!.
+
+
+
+.SH OPTIONS
+.IP "-h, --help"
+Print command line help and exit
+
+.IP "-v, --version"
+Display program version and exit
+
+.IP "-i, --height X"
+If passed with a filename, the file is opened as a raw font file, assuming 
+glyphs are of height X. If -i is used as an argument to fontopia, -w must be
+used as well
+
+.IP "-w, --width X"
+If passed with a filename, the file is opened as a raw font file, assuming 
+glyphs are of width X. If -w is used as an argument to fontopia, -i must be
+used as well
+
+.SH FILES
+.I file-name
+The name of a font file to load into fontopia.
+
+.SH TODO
+- Testing and debugging
+- Help with handling unicode sequences
+
+.SH SEE ALSO
+info fontopia
+
+.SH AUTHOR
+Mohammed Isam <mohammed_isam1984@yahoo.com>
