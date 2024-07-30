@@ -15,7 +15,7 @@
 @SET_MAKE@
 
 # 
-#    Copyright 2015, 2016, 2017, 2018 (c) Mohammed Isam Mohammed [mohammed_isam1984@yahoo.com]
+#    Copyright 2015, 2016, 2017, 2018, 2024 (c) Mohammed Isam Mohammed [mohammed_isam1984@yahoo.com]
 # 
 #    file: Makefile.am
 #    This file is part of fontopia.
@@ -129,23 +129,33 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(docdir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_fontopia_OBJECTS = src/main.$(OBJEXT) src/glyph.$(OBJEXT) \
-	src/metrics.$(OBJEXT) src/unitab.$(OBJEXT) \
-	src/metadata.$(OBJEXT) src/menu_generic.$(OBJEXT) \
-	src/font_ops.$(OBJEXT) src/status.$(OBJEXT) src/view.$(OBJEXT) \
-	src/args.$(OBJEXT) src/keys.$(OBJEXT) src/opensave.$(OBJEXT) \
-	src/glyphext.$(OBJEXT) src/glyphinfo.$(OBJEXT) \
-	src/modules/cp.$(OBJEXT) src/modules/raw.$(OBJEXT) \
-	src/modules/modules.$(OBJEXT) src/modules/psf.$(OBJEXT) \
-	src/modules/bdf.$(OBJEXT) src/readme.$(OBJEXT) \
-	src/modules/bdf_hash.$(OBJEXT) \
-	src/modules/bdf_helper.$(OBJEXT) src/modules/pcf.$(OBJEXT)
+am_fontopia_OBJECTS = src/fontopia-main.$(OBJEXT) \
+	src/fontopia-glyph.$(OBJEXT) src/fontopia-metrics.$(OBJEXT) \
+	src/fontopia-unitab.$(OBJEXT) src/fontopia-metadata.$(OBJEXT) \
+	src/fontopia-menu_generic.$(OBJEXT) \
+	src/fontopia-font_ops.$(OBJEXT) src/fontopia-status.$(OBJEXT) \
+	src/fontopia-view.$(OBJEXT) src/fontopia-args.$(OBJEXT) \
+	src/fontopia-keys.$(OBJEXT) src/fontopia-opensave.$(OBJEXT) \
+	src/fontopia-glyphext.$(OBJEXT) \
+	src/fontopia-glyphinfo.$(OBJEXT) \
+	src/modules/fontopia-cp.$(OBJEXT) \
+	src/modules/fontopia-raw.$(OBJEXT) \
+	src/modules/fontopia-modules.$(OBJEXT) \
+	src/modules/fontopia-psf.$(OBJEXT) \
+	src/modules/fontopia-bdf.$(OBJEXT) \
+	src/fontopia-readme.$(OBJEXT) \
+	src/modules/fontopia-bdf_hash.$(OBJEXT) \
+	src/modules/fontopia-bdf_helper.$(OBJEXT) \
+	src/modules/fontopia-pcf.$(OBJEXT)
 fontopia_OBJECTS = $(am_fontopia_OBJECTS)
 fontopia_DEPENDENCIES =
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+fontopia_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(fontopia_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -161,19 +171,28 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = src/$(DEPDIR)/args.Po src/$(DEPDIR)/font_ops.Po \
-	src/$(DEPDIR)/glyph.Po src/$(DEPDIR)/glyphext.Po \
-	src/$(DEPDIR)/glyphinfo.Po src/$(DEPDIR)/keys.Po \
-	src/$(DEPDIR)/main.Po src/$(DEPDIR)/menu_generic.Po \
-	src/$(DEPDIR)/metadata.Po src/$(DEPDIR)/metrics.Po \
-	src/$(DEPDIR)/opensave.Po src/$(DEPDIR)/readme.Po \
-	src/$(DEPDIR)/status.Po src/$(DEPDIR)/unitab.Po \
-	src/$(DEPDIR)/view.Po src/modules/$(DEPDIR)/bdf.Po \
-	src/modules/$(DEPDIR)/bdf_hash.Po \
-	src/modules/$(DEPDIR)/bdf_helper.Po \
-	src/modules/$(DEPDIR)/cp.Po src/modules/$(DEPDIR)/modules.Po \
-	src/modules/$(DEPDIR)/pcf.Po src/modules/$(DEPDIR)/psf.Po \
-	src/modules/$(DEPDIR)/raw.Po
+am__depfiles_remade = src/$(DEPDIR)/fontopia-args.Po \
+	src/$(DEPDIR)/fontopia-font_ops.Po \
+	src/$(DEPDIR)/fontopia-glyph.Po \
+	src/$(DEPDIR)/fontopia-glyphext.Po \
+	src/$(DEPDIR)/fontopia-glyphinfo.Po \
+	src/$(DEPDIR)/fontopia-keys.Po src/$(DEPDIR)/fontopia-main.Po \
+	src/$(DEPDIR)/fontopia-menu_generic.Po \
+	src/$(DEPDIR)/fontopia-metadata.Po \
+	src/$(DEPDIR)/fontopia-metrics.Po \
+	src/$(DEPDIR)/fontopia-opensave.Po \
+	src/$(DEPDIR)/fontopia-readme.Po \
+	src/$(DEPDIR)/fontopia-status.Po \
+	src/$(DEPDIR)/fontopia-unitab.Po \
+	src/$(DEPDIR)/fontopia-view.Po \
+	src/modules/$(DEPDIR)/fontopia-bdf.Po \
+	src/modules/$(DEPDIR)/fontopia-bdf_hash.Po \
+	src/modules/$(DEPDIR)/fontopia-bdf_helper.Po \
+	src/modules/$(DEPDIR)/fontopia-cp.Po \
+	src/modules/$(DEPDIR)/fontopia-modules.Po \
+	src/modules/$(DEPDIR)/fontopia-pcf.Po \
+	src/modules/$(DEPDIR)/fontopia-psf.Po \
+	src/modules/$(DEPDIR)/fontopia-raw.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -401,17 +420,6 @@ build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
-#EXTRA_DIST += codepages/1117.fcp codepages/667.fcp codepages/668.fcp
-#EXTRA_DIST += codepages/720.fcp codepages/737.fcp codepages/770.fcp
-#EXTRA_DIST += codepages/771.fcp codepages/772.fcp codepages/773.fcp
-#EXTRA_DIST += codepages/774.fcp codepages/775.fcp codepages/850.fcp
-#EXTRA_DIST += codepages/851.fcp codepages/852.fcp codepages/853.fcp
-#EXTRA_DIST += codepages/855.fcp codepages/856.fcp codepages/857.fcp
-#EXTRA_DIST += codepages/859.fcp codepages/860.fcp codepages/861.fcp
-#EXTRA_DIST += codepages/862.fcp codepages/863.fcp codepages/864.fcp
-#EXTRA_DIST += codepages/865.fcp codepages/866.fcp codepages/867.fcp
-#EXTRA_DIST += codepages/869.fcp codepages/874.fcp codepages/895.fcp
-#EXTRA_DIST += codepages/912.fcp codepages/915.fcp
 docdir = $(datarootdir)/doc/@PACKAGE@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
@@ -449,7 +457,6 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = info man
 EXTRA_DIST = ChangeLog AUTHORS COPYING README READMEkeys THANKS
 doc_DATA = COPYING AUTHORS README NEWS ChangeLog READMEkeys THANKS
-#fontopia_SOURCES += src/cp.h src/raw.c src/raw.h src/cp.c
 fontopia_SOURCES = src/main.c src/glyph.c src/metrics.c src/unitab.c \
 	src/metadata.c src/menu_generic.c src/font_ops.c src/status.c \
 	src/view.c src/args.c src/keys.c src/modules/installmod.h \
@@ -462,6 +469,7 @@ fontopia_SOURCES = src/main.c src/glyph.c src/metrics.c src/unitab.c \
 	src/readme.c src/modules/bdf_hash.c src/modules/bdf_helper.c \
 	src/modules/pcf.h src/modules/pcf.c
 fontopia_LDADD = -lgnudos
+fontopia_CFLAGS = -Wall -Wextra -pedantic
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -570,28 +578,33 @@ src/$(am__dirstamp):
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/glyph.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/metrics.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-main.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/unitab.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-glyph.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/metadata.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-metrics.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/menu_generic.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-unitab.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/font_ops.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-metadata.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/status.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-menu_generic.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/view.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/args.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/keys.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/opensave.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-font_ops.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/glyphext.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-status.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/glyphinfo.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-view.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/fontopia-args.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/fontopia-keys.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/fontopia-opensave.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/fontopia-glyphext.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/fontopia-glyphinfo.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/modules/$(am__dirstamp):
 	@$(MKDIR_P) src/modules
@@ -599,28 +612,29 @@ src/modules/$(am__dirstamp):
 src/modules/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/modules/$(DEPDIR)
 	@: > src/modules/$(DEPDIR)/$(am__dirstamp)
-src/modules/cp.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-cp.$(OBJEXT): src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
-src/modules/raw.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-raw.$(OBJEXT): src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
-src/modules/modules.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-modules.$(OBJEXT): src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
-src/modules/psf.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-psf.$(OBJEXT): src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
-src/modules/bdf.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-bdf.$(OBJEXT): src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
-src/readme.$(OBJEXT): src/$(am__dirstamp) \
+src/fontopia-readme.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/modules/bdf_hash.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-bdf_hash.$(OBJEXT): src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
-src/modules/bdf_helper.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-bdf_helper.$(OBJEXT):  \
+	src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
-src/modules/pcf.$(OBJEXT): src/modules/$(am__dirstamp) \
+src/modules/fontopia-pcf.$(OBJEXT): src/modules/$(am__dirstamp) \
 	src/modules/$(DEPDIR)/$(am__dirstamp)
 
 fontopia$(EXEEXT): $(fontopia_OBJECTS) $(fontopia_DEPENDENCIES) $(EXTRA_fontopia_DEPENDENCIES) 
 	@rm -f fontopia$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(fontopia_OBJECTS) $(fontopia_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(fontopia_LINK) $(fontopia_OBJECTS) $(fontopia_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -630,29 +644,29 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/args.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/font_ops.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/glyph.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/glyphext.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/glyphinfo.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/keys.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/menu_generic.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/metadata.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/metrics.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/opensave.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/readme.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/status.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/unitab.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/view.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/bdf.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/bdf_hash.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/bdf_helper.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/cp.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/modules.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/pcf.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/psf.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/raw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-args.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-font_ops.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-glyph.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-glyphext.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-glyphinfo.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-keys.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-menu_generic.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-metadata.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-metrics.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-opensave.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-readme.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-status.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-unitab.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/fontopia-view.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-bdf.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-bdf_hash.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-bdf_helper.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-cp.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-modules.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-pcf.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-psf.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/modules/$(DEPDIR)/fontopia-raw.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -683,6 +697,328 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+src/fontopia-main.o: src/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-main.o -MD -MP -MF src/$(DEPDIR)/fontopia-main.Tpo -c -o src/fontopia-main.o `test -f 'src/main.c' || echo '$(srcdir)/'`src/main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-main.Tpo src/$(DEPDIR)/fontopia-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/main.c' object='src/fontopia-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-main.o `test -f 'src/main.c' || echo '$(srcdir)/'`src/main.c
+
+src/fontopia-main.obj: src/main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-main.obj -MD -MP -MF src/$(DEPDIR)/fontopia-main.Tpo -c -o src/fontopia-main.obj `if test -f 'src/main.c'; then $(CYGPATH_W) 'src/main.c'; else $(CYGPATH_W) '$(srcdir)/src/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-main.Tpo src/$(DEPDIR)/fontopia-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/main.c' object='src/fontopia-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-main.obj `if test -f 'src/main.c'; then $(CYGPATH_W) 'src/main.c'; else $(CYGPATH_W) '$(srcdir)/src/main.c'; fi`
+
+src/fontopia-glyph.o: src/glyph.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-glyph.o -MD -MP -MF src/$(DEPDIR)/fontopia-glyph.Tpo -c -o src/fontopia-glyph.o `test -f 'src/glyph.c' || echo '$(srcdir)/'`src/glyph.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-glyph.Tpo src/$(DEPDIR)/fontopia-glyph.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/glyph.c' object='src/fontopia-glyph.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-glyph.o `test -f 'src/glyph.c' || echo '$(srcdir)/'`src/glyph.c
+
+src/fontopia-glyph.obj: src/glyph.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-glyph.obj -MD -MP -MF src/$(DEPDIR)/fontopia-glyph.Tpo -c -o src/fontopia-glyph.obj `if test -f 'src/glyph.c'; then $(CYGPATH_W) 'src/glyph.c'; else $(CYGPATH_W) '$(srcdir)/src/glyph.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-glyph.Tpo src/$(DEPDIR)/fontopia-glyph.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/glyph.c' object='src/fontopia-glyph.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-glyph.obj `if test -f 'src/glyph.c'; then $(CYGPATH_W) 'src/glyph.c'; else $(CYGPATH_W) '$(srcdir)/src/glyph.c'; fi`
+
+src/fontopia-metrics.o: src/metrics.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-metrics.o -MD -MP -MF src/$(DEPDIR)/fontopia-metrics.Tpo -c -o src/fontopia-metrics.o `test -f 'src/metrics.c' || echo '$(srcdir)/'`src/metrics.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-metrics.Tpo src/$(DEPDIR)/fontopia-metrics.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/metrics.c' object='src/fontopia-metrics.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-metrics.o `test -f 'src/metrics.c' || echo '$(srcdir)/'`src/metrics.c
+
+src/fontopia-metrics.obj: src/metrics.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-metrics.obj -MD -MP -MF src/$(DEPDIR)/fontopia-metrics.Tpo -c -o src/fontopia-metrics.obj `if test -f 'src/metrics.c'; then $(CYGPATH_W) 'src/metrics.c'; else $(CYGPATH_W) '$(srcdir)/src/metrics.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-metrics.Tpo src/$(DEPDIR)/fontopia-metrics.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/metrics.c' object='src/fontopia-metrics.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-metrics.obj `if test -f 'src/metrics.c'; then $(CYGPATH_W) 'src/metrics.c'; else $(CYGPATH_W) '$(srcdir)/src/metrics.c'; fi`
+
+src/fontopia-unitab.o: src/unitab.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-unitab.o -MD -MP -MF src/$(DEPDIR)/fontopia-unitab.Tpo -c -o src/fontopia-unitab.o `test -f 'src/unitab.c' || echo '$(srcdir)/'`src/unitab.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-unitab.Tpo src/$(DEPDIR)/fontopia-unitab.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unitab.c' object='src/fontopia-unitab.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-unitab.o `test -f 'src/unitab.c' || echo '$(srcdir)/'`src/unitab.c
+
+src/fontopia-unitab.obj: src/unitab.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-unitab.obj -MD -MP -MF src/$(DEPDIR)/fontopia-unitab.Tpo -c -o src/fontopia-unitab.obj `if test -f 'src/unitab.c'; then $(CYGPATH_W) 'src/unitab.c'; else $(CYGPATH_W) '$(srcdir)/src/unitab.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-unitab.Tpo src/$(DEPDIR)/fontopia-unitab.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unitab.c' object='src/fontopia-unitab.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-unitab.obj `if test -f 'src/unitab.c'; then $(CYGPATH_W) 'src/unitab.c'; else $(CYGPATH_W) '$(srcdir)/src/unitab.c'; fi`
+
+src/fontopia-metadata.o: src/metadata.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-metadata.o -MD -MP -MF src/$(DEPDIR)/fontopia-metadata.Tpo -c -o src/fontopia-metadata.o `test -f 'src/metadata.c' || echo '$(srcdir)/'`src/metadata.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-metadata.Tpo src/$(DEPDIR)/fontopia-metadata.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/metadata.c' object='src/fontopia-metadata.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-metadata.o `test -f 'src/metadata.c' || echo '$(srcdir)/'`src/metadata.c
+
+src/fontopia-metadata.obj: src/metadata.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-metadata.obj -MD -MP -MF src/$(DEPDIR)/fontopia-metadata.Tpo -c -o src/fontopia-metadata.obj `if test -f 'src/metadata.c'; then $(CYGPATH_W) 'src/metadata.c'; else $(CYGPATH_W) '$(srcdir)/src/metadata.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-metadata.Tpo src/$(DEPDIR)/fontopia-metadata.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/metadata.c' object='src/fontopia-metadata.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-metadata.obj `if test -f 'src/metadata.c'; then $(CYGPATH_W) 'src/metadata.c'; else $(CYGPATH_W) '$(srcdir)/src/metadata.c'; fi`
+
+src/fontopia-menu_generic.o: src/menu_generic.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-menu_generic.o -MD -MP -MF src/$(DEPDIR)/fontopia-menu_generic.Tpo -c -o src/fontopia-menu_generic.o `test -f 'src/menu_generic.c' || echo '$(srcdir)/'`src/menu_generic.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-menu_generic.Tpo src/$(DEPDIR)/fontopia-menu_generic.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/menu_generic.c' object='src/fontopia-menu_generic.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-menu_generic.o `test -f 'src/menu_generic.c' || echo '$(srcdir)/'`src/menu_generic.c
+
+src/fontopia-menu_generic.obj: src/menu_generic.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-menu_generic.obj -MD -MP -MF src/$(DEPDIR)/fontopia-menu_generic.Tpo -c -o src/fontopia-menu_generic.obj `if test -f 'src/menu_generic.c'; then $(CYGPATH_W) 'src/menu_generic.c'; else $(CYGPATH_W) '$(srcdir)/src/menu_generic.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-menu_generic.Tpo src/$(DEPDIR)/fontopia-menu_generic.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/menu_generic.c' object='src/fontopia-menu_generic.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-menu_generic.obj `if test -f 'src/menu_generic.c'; then $(CYGPATH_W) 'src/menu_generic.c'; else $(CYGPATH_W) '$(srcdir)/src/menu_generic.c'; fi`
+
+src/fontopia-font_ops.o: src/font_ops.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-font_ops.o -MD -MP -MF src/$(DEPDIR)/fontopia-font_ops.Tpo -c -o src/fontopia-font_ops.o `test -f 'src/font_ops.c' || echo '$(srcdir)/'`src/font_ops.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-font_ops.Tpo src/$(DEPDIR)/fontopia-font_ops.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/font_ops.c' object='src/fontopia-font_ops.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-font_ops.o `test -f 'src/font_ops.c' || echo '$(srcdir)/'`src/font_ops.c
+
+src/fontopia-font_ops.obj: src/font_ops.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-font_ops.obj -MD -MP -MF src/$(DEPDIR)/fontopia-font_ops.Tpo -c -o src/fontopia-font_ops.obj `if test -f 'src/font_ops.c'; then $(CYGPATH_W) 'src/font_ops.c'; else $(CYGPATH_W) '$(srcdir)/src/font_ops.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-font_ops.Tpo src/$(DEPDIR)/fontopia-font_ops.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/font_ops.c' object='src/fontopia-font_ops.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-font_ops.obj `if test -f 'src/font_ops.c'; then $(CYGPATH_W) 'src/font_ops.c'; else $(CYGPATH_W) '$(srcdir)/src/font_ops.c'; fi`
+
+src/fontopia-status.o: src/status.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-status.o -MD -MP -MF src/$(DEPDIR)/fontopia-status.Tpo -c -o src/fontopia-status.o `test -f 'src/status.c' || echo '$(srcdir)/'`src/status.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-status.Tpo src/$(DEPDIR)/fontopia-status.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/status.c' object='src/fontopia-status.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-status.o `test -f 'src/status.c' || echo '$(srcdir)/'`src/status.c
+
+src/fontopia-status.obj: src/status.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-status.obj -MD -MP -MF src/$(DEPDIR)/fontopia-status.Tpo -c -o src/fontopia-status.obj `if test -f 'src/status.c'; then $(CYGPATH_W) 'src/status.c'; else $(CYGPATH_W) '$(srcdir)/src/status.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-status.Tpo src/$(DEPDIR)/fontopia-status.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/status.c' object='src/fontopia-status.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-status.obj `if test -f 'src/status.c'; then $(CYGPATH_W) 'src/status.c'; else $(CYGPATH_W) '$(srcdir)/src/status.c'; fi`
+
+src/fontopia-view.o: src/view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-view.o -MD -MP -MF src/$(DEPDIR)/fontopia-view.Tpo -c -o src/fontopia-view.o `test -f 'src/view.c' || echo '$(srcdir)/'`src/view.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-view.Tpo src/$(DEPDIR)/fontopia-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/view.c' object='src/fontopia-view.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-view.o `test -f 'src/view.c' || echo '$(srcdir)/'`src/view.c
+
+src/fontopia-view.obj: src/view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-view.obj -MD -MP -MF src/$(DEPDIR)/fontopia-view.Tpo -c -o src/fontopia-view.obj `if test -f 'src/view.c'; then $(CYGPATH_W) 'src/view.c'; else $(CYGPATH_W) '$(srcdir)/src/view.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-view.Tpo src/$(DEPDIR)/fontopia-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/view.c' object='src/fontopia-view.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-view.obj `if test -f 'src/view.c'; then $(CYGPATH_W) 'src/view.c'; else $(CYGPATH_W) '$(srcdir)/src/view.c'; fi`
+
+src/fontopia-args.o: src/args.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-args.o -MD -MP -MF src/$(DEPDIR)/fontopia-args.Tpo -c -o src/fontopia-args.o `test -f 'src/args.c' || echo '$(srcdir)/'`src/args.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-args.Tpo src/$(DEPDIR)/fontopia-args.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/args.c' object='src/fontopia-args.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-args.o `test -f 'src/args.c' || echo '$(srcdir)/'`src/args.c
+
+src/fontopia-args.obj: src/args.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-args.obj -MD -MP -MF src/$(DEPDIR)/fontopia-args.Tpo -c -o src/fontopia-args.obj `if test -f 'src/args.c'; then $(CYGPATH_W) 'src/args.c'; else $(CYGPATH_W) '$(srcdir)/src/args.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-args.Tpo src/$(DEPDIR)/fontopia-args.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/args.c' object='src/fontopia-args.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-args.obj `if test -f 'src/args.c'; then $(CYGPATH_W) 'src/args.c'; else $(CYGPATH_W) '$(srcdir)/src/args.c'; fi`
+
+src/fontopia-keys.o: src/keys.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-keys.o -MD -MP -MF src/$(DEPDIR)/fontopia-keys.Tpo -c -o src/fontopia-keys.o `test -f 'src/keys.c' || echo '$(srcdir)/'`src/keys.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-keys.Tpo src/$(DEPDIR)/fontopia-keys.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/keys.c' object='src/fontopia-keys.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-keys.o `test -f 'src/keys.c' || echo '$(srcdir)/'`src/keys.c
+
+src/fontopia-keys.obj: src/keys.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-keys.obj -MD -MP -MF src/$(DEPDIR)/fontopia-keys.Tpo -c -o src/fontopia-keys.obj `if test -f 'src/keys.c'; then $(CYGPATH_W) 'src/keys.c'; else $(CYGPATH_W) '$(srcdir)/src/keys.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-keys.Tpo src/$(DEPDIR)/fontopia-keys.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/keys.c' object='src/fontopia-keys.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-keys.obj `if test -f 'src/keys.c'; then $(CYGPATH_W) 'src/keys.c'; else $(CYGPATH_W) '$(srcdir)/src/keys.c'; fi`
+
+src/fontopia-opensave.o: src/opensave.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-opensave.o -MD -MP -MF src/$(DEPDIR)/fontopia-opensave.Tpo -c -o src/fontopia-opensave.o `test -f 'src/opensave.c' || echo '$(srcdir)/'`src/opensave.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-opensave.Tpo src/$(DEPDIR)/fontopia-opensave.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/opensave.c' object='src/fontopia-opensave.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-opensave.o `test -f 'src/opensave.c' || echo '$(srcdir)/'`src/opensave.c
+
+src/fontopia-opensave.obj: src/opensave.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-opensave.obj -MD -MP -MF src/$(DEPDIR)/fontopia-opensave.Tpo -c -o src/fontopia-opensave.obj `if test -f 'src/opensave.c'; then $(CYGPATH_W) 'src/opensave.c'; else $(CYGPATH_W) '$(srcdir)/src/opensave.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-opensave.Tpo src/$(DEPDIR)/fontopia-opensave.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/opensave.c' object='src/fontopia-opensave.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-opensave.obj `if test -f 'src/opensave.c'; then $(CYGPATH_W) 'src/opensave.c'; else $(CYGPATH_W) '$(srcdir)/src/opensave.c'; fi`
+
+src/fontopia-glyphext.o: src/glyphext.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-glyphext.o -MD -MP -MF src/$(DEPDIR)/fontopia-glyphext.Tpo -c -o src/fontopia-glyphext.o `test -f 'src/glyphext.c' || echo '$(srcdir)/'`src/glyphext.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-glyphext.Tpo src/$(DEPDIR)/fontopia-glyphext.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/glyphext.c' object='src/fontopia-glyphext.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-glyphext.o `test -f 'src/glyphext.c' || echo '$(srcdir)/'`src/glyphext.c
+
+src/fontopia-glyphext.obj: src/glyphext.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-glyphext.obj -MD -MP -MF src/$(DEPDIR)/fontopia-glyphext.Tpo -c -o src/fontopia-glyphext.obj `if test -f 'src/glyphext.c'; then $(CYGPATH_W) 'src/glyphext.c'; else $(CYGPATH_W) '$(srcdir)/src/glyphext.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-glyphext.Tpo src/$(DEPDIR)/fontopia-glyphext.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/glyphext.c' object='src/fontopia-glyphext.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-glyphext.obj `if test -f 'src/glyphext.c'; then $(CYGPATH_W) 'src/glyphext.c'; else $(CYGPATH_W) '$(srcdir)/src/glyphext.c'; fi`
+
+src/fontopia-glyphinfo.o: src/glyphinfo.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-glyphinfo.o -MD -MP -MF src/$(DEPDIR)/fontopia-glyphinfo.Tpo -c -o src/fontopia-glyphinfo.o `test -f 'src/glyphinfo.c' || echo '$(srcdir)/'`src/glyphinfo.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-glyphinfo.Tpo src/$(DEPDIR)/fontopia-glyphinfo.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/glyphinfo.c' object='src/fontopia-glyphinfo.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-glyphinfo.o `test -f 'src/glyphinfo.c' || echo '$(srcdir)/'`src/glyphinfo.c
+
+src/fontopia-glyphinfo.obj: src/glyphinfo.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-glyphinfo.obj -MD -MP -MF src/$(DEPDIR)/fontopia-glyphinfo.Tpo -c -o src/fontopia-glyphinfo.obj `if test -f 'src/glyphinfo.c'; then $(CYGPATH_W) 'src/glyphinfo.c'; else $(CYGPATH_W) '$(srcdir)/src/glyphinfo.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-glyphinfo.Tpo src/$(DEPDIR)/fontopia-glyphinfo.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/glyphinfo.c' object='src/fontopia-glyphinfo.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-glyphinfo.obj `if test -f 'src/glyphinfo.c'; then $(CYGPATH_W) 'src/glyphinfo.c'; else $(CYGPATH_W) '$(srcdir)/src/glyphinfo.c'; fi`
+
+src/modules/fontopia-cp.o: src/modules/cp.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-cp.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-cp.Tpo -c -o src/modules/fontopia-cp.o `test -f 'src/modules/cp.c' || echo '$(srcdir)/'`src/modules/cp.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-cp.Tpo src/modules/$(DEPDIR)/fontopia-cp.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/cp.c' object='src/modules/fontopia-cp.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-cp.o `test -f 'src/modules/cp.c' || echo '$(srcdir)/'`src/modules/cp.c
+
+src/modules/fontopia-cp.obj: src/modules/cp.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-cp.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-cp.Tpo -c -o src/modules/fontopia-cp.obj `if test -f 'src/modules/cp.c'; then $(CYGPATH_W) 'src/modules/cp.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/cp.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-cp.Tpo src/modules/$(DEPDIR)/fontopia-cp.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/cp.c' object='src/modules/fontopia-cp.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-cp.obj `if test -f 'src/modules/cp.c'; then $(CYGPATH_W) 'src/modules/cp.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/cp.c'; fi`
+
+src/modules/fontopia-raw.o: src/modules/raw.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-raw.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-raw.Tpo -c -o src/modules/fontopia-raw.o `test -f 'src/modules/raw.c' || echo '$(srcdir)/'`src/modules/raw.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-raw.Tpo src/modules/$(DEPDIR)/fontopia-raw.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/raw.c' object='src/modules/fontopia-raw.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-raw.o `test -f 'src/modules/raw.c' || echo '$(srcdir)/'`src/modules/raw.c
+
+src/modules/fontopia-raw.obj: src/modules/raw.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-raw.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-raw.Tpo -c -o src/modules/fontopia-raw.obj `if test -f 'src/modules/raw.c'; then $(CYGPATH_W) 'src/modules/raw.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/raw.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-raw.Tpo src/modules/$(DEPDIR)/fontopia-raw.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/raw.c' object='src/modules/fontopia-raw.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-raw.obj `if test -f 'src/modules/raw.c'; then $(CYGPATH_W) 'src/modules/raw.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/raw.c'; fi`
+
+src/modules/fontopia-modules.o: src/modules/modules.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-modules.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-modules.Tpo -c -o src/modules/fontopia-modules.o `test -f 'src/modules/modules.c' || echo '$(srcdir)/'`src/modules/modules.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-modules.Tpo src/modules/$(DEPDIR)/fontopia-modules.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/modules.c' object='src/modules/fontopia-modules.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-modules.o `test -f 'src/modules/modules.c' || echo '$(srcdir)/'`src/modules/modules.c
+
+src/modules/fontopia-modules.obj: src/modules/modules.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-modules.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-modules.Tpo -c -o src/modules/fontopia-modules.obj `if test -f 'src/modules/modules.c'; then $(CYGPATH_W) 'src/modules/modules.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/modules.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-modules.Tpo src/modules/$(DEPDIR)/fontopia-modules.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/modules.c' object='src/modules/fontopia-modules.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-modules.obj `if test -f 'src/modules/modules.c'; then $(CYGPATH_W) 'src/modules/modules.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/modules.c'; fi`
+
+src/modules/fontopia-psf.o: src/modules/psf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-psf.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-psf.Tpo -c -o src/modules/fontopia-psf.o `test -f 'src/modules/psf.c' || echo '$(srcdir)/'`src/modules/psf.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-psf.Tpo src/modules/$(DEPDIR)/fontopia-psf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/psf.c' object='src/modules/fontopia-psf.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-psf.o `test -f 'src/modules/psf.c' || echo '$(srcdir)/'`src/modules/psf.c
+
+src/modules/fontopia-psf.obj: src/modules/psf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-psf.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-psf.Tpo -c -o src/modules/fontopia-psf.obj `if test -f 'src/modules/psf.c'; then $(CYGPATH_W) 'src/modules/psf.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/psf.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-psf.Tpo src/modules/$(DEPDIR)/fontopia-psf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/psf.c' object='src/modules/fontopia-psf.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-psf.obj `if test -f 'src/modules/psf.c'; then $(CYGPATH_W) 'src/modules/psf.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/psf.c'; fi`
+
+src/modules/fontopia-bdf.o: src/modules/bdf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-bdf.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-bdf.Tpo -c -o src/modules/fontopia-bdf.o `test -f 'src/modules/bdf.c' || echo '$(srcdir)/'`src/modules/bdf.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-bdf.Tpo src/modules/$(DEPDIR)/fontopia-bdf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/bdf.c' object='src/modules/fontopia-bdf.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-bdf.o `test -f 'src/modules/bdf.c' || echo '$(srcdir)/'`src/modules/bdf.c
+
+src/modules/fontopia-bdf.obj: src/modules/bdf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-bdf.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-bdf.Tpo -c -o src/modules/fontopia-bdf.obj `if test -f 'src/modules/bdf.c'; then $(CYGPATH_W) 'src/modules/bdf.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/bdf.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-bdf.Tpo src/modules/$(DEPDIR)/fontopia-bdf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/bdf.c' object='src/modules/fontopia-bdf.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-bdf.obj `if test -f 'src/modules/bdf.c'; then $(CYGPATH_W) 'src/modules/bdf.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/bdf.c'; fi`
+
+src/fontopia-readme.o: src/readme.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-readme.o -MD -MP -MF src/$(DEPDIR)/fontopia-readme.Tpo -c -o src/fontopia-readme.o `test -f 'src/readme.c' || echo '$(srcdir)/'`src/readme.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-readme.Tpo src/$(DEPDIR)/fontopia-readme.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/readme.c' object='src/fontopia-readme.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-readme.o `test -f 'src/readme.c' || echo '$(srcdir)/'`src/readme.c
+
+src/fontopia-readme.obj: src/readme.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/fontopia-readme.obj -MD -MP -MF src/$(DEPDIR)/fontopia-readme.Tpo -c -o src/fontopia-readme.obj `if test -f 'src/readme.c'; then $(CYGPATH_W) 'src/readme.c'; else $(CYGPATH_W) '$(srcdir)/src/readme.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/fontopia-readme.Tpo src/$(DEPDIR)/fontopia-readme.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/readme.c' object='src/fontopia-readme.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/fontopia-readme.obj `if test -f 'src/readme.c'; then $(CYGPATH_W) 'src/readme.c'; else $(CYGPATH_W) '$(srcdir)/src/readme.c'; fi`
+
+src/modules/fontopia-bdf_hash.o: src/modules/bdf_hash.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-bdf_hash.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-bdf_hash.Tpo -c -o src/modules/fontopia-bdf_hash.o `test -f 'src/modules/bdf_hash.c' || echo '$(srcdir)/'`src/modules/bdf_hash.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-bdf_hash.Tpo src/modules/$(DEPDIR)/fontopia-bdf_hash.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/bdf_hash.c' object='src/modules/fontopia-bdf_hash.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-bdf_hash.o `test -f 'src/modules/bdf_hash.c' || echo '$(srcdir)/'`src/modules/bdf_hash.c
+
+src/modules/fontopia-bdf_hash.obj: src/modules/bdf_hash.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-bdf_hash.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-bdf_hash.Tpo -c -o src/modules/fontopia-bdf_hash.obj `if test -f 'src/modules/bdf_hash.c'; then $(CYGPATH_W) 'src/modules/bdf_hash.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/bdf_hash.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-bdf_hash.Tpo src/modules/$(DEPDIR)/fontopia-bdf_hash.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/bdf_hash.c' object='src/modules/fontopia-bdf_hash.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-bdf_hash.obj `if test -f 'src/modules/bdf_hash.c'; then $(CYGPATH_W) 'src/modules/bdf_hash.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/bdf_hash.c'; fi`
+
+src/modules/fontopia-bdf_helper.o: src/modules/bdf_helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-bdf_helper.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-bdf_helper.Tpo -c -o src/modules/fontopia-bdf_helper.o `test -f 'src/modules/bdf_helper.c' || echo '$(srcdir)/'`src/modules/bdf_helper.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-bdf_helper.Tpo src/modules/$(DEPDIR)/fontopia-bdf_helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/bdf_helper.c' object='src/modules/fontopia-bdf_helper.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-bdf_helper.o `test -f 'src/modules/bdf_helper.c' || echo '$(srcdir)/'`src/modules/bdf_helper.c
+
+src/modules/fontopia-bdf_helper.obj: src/modules/bdf_helper.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-bdf_helper.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-bdf_helper.Tpo -c -o src/modules/fontopia-bdf_helper.obj `if test -f 'src/modules/bdf_helper.c'; then $(CYGPATH_W) 'src/modules/bdf_helper.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/bdf_helper.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-bdf_helper.Tpo src/modules/$(DEPDIR)/fontopia-bdf_helper.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/bdf_helper.c' object='src/modules/fontopia-bdf_helper.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-bdf_helper.obj `if test -f 'src/modules/bdf_helper.c'; then $(CYGPATH_W) 'src/modules/bdf_helper.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/bdf_helper.c'; fi`
+
+src/modules/fontopia-pcf.o: src/modules/pcf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-pcf.o -MD -MP -MF src/modules/$(DEPDIR)/fontopia-pcf.Tpo -c -o src/modules/fontopia-pcf.o `test -f 'src/modules/pcf.c' || echo '$(srcdir)/'`src/modules/pcf.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-pcf.Tpo src/modules/$(DEPDIR)/fontopia-pcf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/pcf.c' object='src/modules/fontopia-pcf.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-pcf.o `test -f 'src/modules/pcf.c' || echo '$(srcdir)/'`src/modules/pcf.c
+
+src/modules/fontopia-pcf.obj: src/modules/pcf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -MT src/modules/fontopia-pcf.obj -MD -MP -MF src/modules/$(DEPDIR)/fontopia-pcf.Tpo -c -o src/modules/fontopia-pcf.obj `if test -f 'src/modules/pcf.c'; then $(CYGPATH_W) 'src/modules/pcf.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/pcf.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/modules/$(DEPDIR)/fontopia-pcf.Tpo src/modules/$(DEPDIR)/fontopia-pcf.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/modules/pcf.c' object='src/modules/fontopia-pcf.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(fontopia_CFLAGS) $(CFLAGS) -c -o src/modules/fontopia-pcf.obj `if test -f 'src/modules/pcf.c'; then $(CYGPATH_W) 'src/modules/pcf.c'; else $(CYGPATH_W) '$(srcdir)/src/modules/pcf.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1064,29 +1400,29 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f src/$(DEPDIR)/args.Po
-	-rm -f src/$(DEPDIR)/font_ops.Po
-	-rm -f src/$(DEPDIR)/glyph.Po
-	-rm -f src/$(DEPDIR)/glyphext.Po
-	-rm -f src/$(DEPDIR)/glyphinfo.Po
-	-rm -f src/$(DEPDIR)/keys.Po
-	-rm -f src/$(DEPDIR)/main.Po
-	-rm -f src/$(DEPDIR)/menu_generic.Po
-	-rm -f src/$(DEPDIR)/metadata.Po
-	-rm -f src/$(DEPDIR)/metrics.Po
-	-rm -f src/$(DEPDIR)/opensave.Po
-	-rm -f src/$(DEPDIR)/readme.Po
-	-rm -f src/$(DEPDIR)/status.Po
-	-rm -f src/$(DEPDIR)/unitab.Po
-	-rm -f src/$(DEPDIR)/view.Po
-	-rm -f src/modules/$(DEPDIR)/bdf.Po
-	-rm -f src/modules/$(DEPDIR)/bdf_hash.Po
-	-rm -f src/modules/$(DEPDIR)/bdf_helper.Po
-	-rm -f src/modules/$(DEPDIR)/cp.Po
-	-rm -f src/modules/$(DEPDIR)/modules.Po
-	-rm -f src/modules/$(DEPDIR)/pcf.Po
-	-rm -f src/modules/$(DEPDIR)/psf.Po
-	-rm -f src/modules/$(DEPDIR)/raw.Po
+		-rm -f src/$(DEPDIR)/fontopia-args.Po
+	-rm -f src/$(DEPDIR)/fontopia-font_ops.Po
+	-rm -f src/$(DEPDIR)/fontopia-glyph.Po
+	-rm -f src/$(DEPDIR)/fontopia-glyphext.Po
+	-rm -f src/$(DEPDIR)/fontopia-glyphinfo.Po
+	-rm -f src/$(DEPDIR)/fontopia-keys.Po
+	-rm -f src/$(DEPDIR)/fontopia-main.Po
+	-rm -f src/$(DEPDIR)/fontopia-menu_generic.Po
+	-rm -f src/$(DEPDIR)/fontopia-metadata.Po
+	-rm -f src/$(DEPDIR)/fontopia-metrics.Po
+	-rm -f src/$(DEPDIR)/fontopia-opensave.Po
+	-rm -f src/$(DEPDIR)/fontopia-readme.Po
+	-rm -f src/$(DEPDIR)/fontopia-status.Po
+	-rm -f src/$(DEPDIR)/fontopia-unitab.Po
+	-rm -f src/$(DEPDIR)/fontopia-view.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-bdf.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-bdf_hash.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-bdf_helper.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-cp.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-modules.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-pcf.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-psf.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-raw.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1134,29 +1470,29 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f src/$(DEPDIR)/args.Po
-	-rm -f src/$(DEPDIR)/font_ops.Po
-	-rm -f src/$(DEPDIR)/glyph.Po
-	-rm -f src/$(DEPDIR)/glyphext.Po
-	-rm -f src/$(DEPDIR)/glyphinfo.Po
-	-rm -f src/$(DEPDIR)/keys.Po
-	-rm -f src/$(DEPDIR)/main.Po
-	-rm -f src/$(DEPDIR)/menu_generic.Po
-	-rm -f src/$(DEPDIR)/metadata.Po
-	-rm -f src/$(DEPDIR)/metrics.Po
-	-rm -f src/$(DEPDIR)/opensave.Po
-	-rm -f src/$(DEPDIR)/readme.Po
-	-rm -f src/$(DEPDIR)/status.Po
-	-rm -f src/$(DEPDIR)/unitab.Po
-	-rm -f src/$(DEPDIR)/view.Po
-	-rm -f src/modules/$(DEPDIR)/bdf.Po
-	-rm -f src/modules/$(DEPDIR)/bdf_hash.Po
-	-rm -f src/modules/$(DEPDIR)/bdf_helper.Po
-	-rm -f src/modules/$(DEPDIR)/cp.Po
-	-rm -f src/modules/$(DEPDIR)/modules.Po
-	-rm -f src/modules/$(DEPDIR)/pcf.Po
-	-rm -f src/modules/$(DEPDIR)/psf.Po
-	-rm -f src/modules/$(DEPDIR)/raw.Po
+		-rm -f src/$(DEPDIR)/fontopia-args.Po
+	-rm -f src/$(DEPDIR)/fontopia-font_ops.Po
+	-rm -f src/$(DEPDIR)/fontopia-glyph.Po
+	-rm -f src/$(DEPDIR)/fontopia-glyphext.Po
+	-rm -f src/$(DEPDIR)/fontopia-glyphinfo.Po
+	-rm -f src/$(DEPDIR)/fontopia-keys.Po
+	-rm -f src/$(DEPDIR)/fontopia-main.Po
+	-rm -f src/$(DEPDIR)/fontopia-menu_generic.Po
+	-rm -f src/$(DEPDIR)/fontopia-metadata.Po
+	-rm -f src/$(DEPDIR)/fontopia-metrics.Po
+	-rm -f src/$(DEPDIR)/fontopia-opensave.Po
+	-rm -f src/$(DEPDIR)/fontopia-readme.Po
+	-rm -f src/$(DEPDIR)/fontopia-status.Po
+	-rm -f src/$(DEPDIR)/fontopia-unitab.Po
+	-rm -f src/$(DEPDIR)/fontopia-view.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-bdf.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-bdf_hash.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-bdf_helper.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-cp.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-modules.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-pcf.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-psf.Po
+	-rm -f src/modules/$(DEPDIR)/fontopia-raw.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
