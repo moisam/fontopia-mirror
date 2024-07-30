@@ -36,7 +36,7 @@ struct dialog_size
     int w, h;
 };
 
-static int one(const struct dirent *unused) 
+static int one(const struct dirent *unused __attribute__((unused))) 
 {
     return 1;
 }
@@ -370,6 +370,7 @@ loop:
         {
             case(SPACE_KEY):
                 if(active_field == 1) goto do_char;
+                __attribute__((fallthrough));
 
             case(ENTER_KEY):
                 if(active_field == 1)

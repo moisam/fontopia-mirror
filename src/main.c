@@ -181,7 +181,8 @@ int main(int argc, char **argv)
                 }
 
                 strcpy(abt, about_str);
-                for(i = 0; i < strlen(fontopia_ver); i++) abt[32+i] = fontopia_ver[i];
+                for(i = 0; i < (int)strlen(fontopia_ver); i++) 
+                    abt[32+i] = fontopia_ver[i];
 
                 showAbout(abt);
                 free(abt);

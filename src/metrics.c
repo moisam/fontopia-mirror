@@ -25,7 +25,11 @@
 #include "modules/cp.h"
 #include "modules/raw.h"
 
-void handle_hw_change(struct font_s *font, int old_height, int old_width, int old_length)
+extern unsigned short default_unicode_table[]; /* psf.c */
+
+
+void handle_hw_change(struct font_s *font, int old_height, int old_width,
+                                           unsigned int old_length)
 {
     //status_msg("Applying changes to glyph size...");
     
@@ -77,7 +81,7 @@ void handle_hw_change(struct font_s *font, int old_height, int old_width, int ol
     else if(font->width > 8 && font->width < 16) base_o2 <<= (16-font->width);
     else if(font->width > 16 && font->width < 32) base_o2 <<= (32-font->width);
 
-    while(i < font->data_size)
+    while(i < (int)font->data_size)
     {
         int j = 0;
         int j2 = 0;
@@ -93,7 +97,7 @@ void handle_hw_change(struct font_s *font, int old_height, int old_width, int ol
             unsigned int o2 = base_o2;
             int k = 0;
 
-            while(k < font->width)
+            while(k < (int)font->width)
             {
                 if(wskip)    /* shrinking */
                 {
@@ -115,7 +119,7 @@ void handle_hw_change(struct font_s *font, int old_height, int old_width, int ol
                     k += rwskip;
 
                     if(o1 == 0)
-                        while(k++ < font->width) ;
+                        while(k++ < (int)font->width) ;
                 }
             }
 
@@ -160,7 +164,7 @@ void handle_hw_change(struct font_s *font, int old_height, int old_width, int ol
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
-void shrink_glyphs(struct font_s *font, int old_length)
+void shrink_glyphs(struct font_s *font, unsigned int old_length)
 {
     status_msg("Applying changes to font length...");
 
@@ -170,7 +174,7 @@ void shrink_glyphs(struct font_s *font, int old_length)
         psf_shrink_glyphs(font, old_length);
 }
 
-void expand_glyphs(struct font_s *font, int old_length, int option)
+void expand_glyphs(struct font_s *font, unsigned int old_length, int option)
 {
     status_msg("Applying changes to font length...");
 
@@ -180,7 +184,7 @@ void expand_glyphs(struct font_s *font, int old_length, int option)
         psf_expand_glyphs(font, old_length, option);
 }
 
-int ok_to_change_length(struct font_s *font, int old_length)
+int ok_to_change_length(struct font_s *font, unsigned int old_length)
 {
     if(old_length == font->length) return 1;
     if(!font->module->shrink_glyphs && !font->module->expand_glyphs)
@@ -336,7 +340,7 @@ refresh:
     return !(res == 1);
 }
 
-void handle_length_change(struct font_s *font, int old_length)
+void handle_length_change(struct font_s *font, unsigned int old_length)
 {
     if(old_length == font->length) return;
 
@@ -367,8 +371,90 @@ end:
 void handle_unicode_table_change(struct font_s *font, char old_has_unicode_table)
 {
     if(font->has_unicode_table == old_has_unicode_table) return;
-    if(font->module->handle_unicode_table_change)
-        font->module->handle_unicode_table_change(font, old_has_unicode_table);
+
+    /***********************/
+    /* remove unicode info */
+    /***********************/
+    if(!font->has_unicode_table)
+    {
+        int res = msgBox("You chose to erase this font's Unicode table\n"
+                         "This means total & permanent LOSS of this information!\n"
+                         "Proceed?", BUTTON_YES|BUTTON_NO, CONFIRM);
+
+        if(res != BUTTON_YES)
+        {
+            font->has_unicode_table = old_has_unicode_table;
+            return;
+        }
+
+        if(font->unicode_info) free(font->unicode_info);
+        font->unicode_info = 0;
+        font->unicode_info_size = 0;
+        free_unicode_table(font);
+    }
+    /***************************/
+    /* make empty unicode info */
+    /***************************/
+    else
+    {
+        unsigned int bytes = 0;
+
+        if(font->version == VER_PSF2) bytes = font->length*2;
+        else bytes = font->length*4;
+
+        font->unicode_info_size = bytes;
+        font->unicode_info = (void *)malloc(font->unicode_info_size);
+
+        if(!font->unicode_info)
+        {
+            font->has_unicode_table = old_has_unicode_table;
+            status_error("Insufficient memory to make new unicode table");
+            return;
+        }
+
+        /* make the new table */
+        unsigned int i, j = 0;
+
+        if(font->version == VER_PSF2)
+        {
+            unsigned char *u = (unsigned char *)font->unicode_info;
+            for(i = 0; i < bytes/2; i++)
+            {
+                u[j] = 0;
+                u[j+1] = 0xFF;
+                j += 2;
+            }
+            font->utf_version = VER_PSF2;
+        }
+        else
+        {
+            unsigned short *u = (unsigned short *)font->unicode_info;
+            for(i = 0; i < bytes/4; i++)
+            {
+                u[j] = default_unicode_table[i];
+                u[j+1] = 0xFFFF;
+                j += 2;
+            }
+            font->utf_version = VER_PSF1;
+        }
+
+        if(!create_empty_unitab(font))
+        {
+            font->has_unicode_table = old_has_unicode_table;
+            status_error("Insufficient memory to make new unicode table");
+            return;
+        }
+
+        get_font_unicode_table(font);
+    }
+
+    force_font_dirty(font);
+
+    struct module_s *mod = get_module_by_name(font->version < 3 ? "psf" : 
+                                              get_version_str(font->version));
+
+    if(mod->handle_unicode_table_change)
+        mod->handle_unicode_table_change(font);
 }
 
 
@@ -470,7 +556,7 @@ int show_font_metrics(struct font_s *font)
     unsigned int old_length = font->length;
     unsigned char old_has_unicode_table = font->has_unicode_table;
     unsigned char old_version = font->version;
-  
+
     /* we add one because PSF has two versions but one module */
     int max_ver = get_registered_modules()+1;
 
@@ -520,6 +606,7 @@ skip:
                     refresh_metrics_window(font, x, y, sel);
                     break;
                 }
+                __attribute__((fallthrough));
 
             case(UP_KEY):
                 if(sel == 3) sel = 1;
@@ -537,6 +624,7 @@ skip:
                     refresh_metrics_window(font, x, y, sel);
                     break;
                 }
+                __attribute__((fallthrough));
 
             case(DOWN_KEY):
                 if(sel == 1) sel = 3;
@@ -577,7 +665,7 @@ skip:
 
                         //if(font->height > mod->max_height) 
                         //    font->height = mod->max_height;
-                        int h = mod->next_acceptable_height(font);
+                        unsigned int h = mod->next_acceptable_height(font);
 
                         if(h == font->height)
                         {
@@ -609,7 +697,7 @@ skip:
                         /* any width larger than 8 is incompatible with PSF1 */
                         ////if(font->width > 8 && font->version == VER_PSF1) font->version = VER_PSF2;
                         //if(font->width > 8 && font->version == VER_PSF1) font->width = 8;
-                        int w = mod->next_acceptable_width(font);
+                        unsigned int w = mod->next_acceptable_width(font);
 
                         if(w == font->width)
                         {
@@ -659,7 +747,11 @@ skip:
                     {
                         font->has_unicode_table = !font->has_unicode_table;
                         if(font->version == VER_CP || font->version == VER_RAW)
+                        {
                             font->has_unicode_table = 0;
+                            msgBox("This font format does not support "
+                                   "Unicode tables.", BUTTON_OK, INFO);
+                        }
                     }
                     else if(sel == 5)
                     {

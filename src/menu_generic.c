@@ -56,7 +56,7 @@ int show_menu(char **menu_items, unsigned int item_count, char *title,
     /* try to guess a proper height */
     if(h == 0)
     {
-        if(item_count < SCREEN_H-1)
+        if(item_count < (unsigned)(SCREEN_H-1))
         {
             h = item_count+1;
         }
@@ -68,7 +68,7 @@ int show_menu(char **menu_items, unsigned int item_count, char *title,
     }
     else
     {
-        if(h > SCREEN_H-1)
+        if(h > (unsigned)(SCREEN_H-1))
         {
             h = SCREEN_H-1;
             row = 1;
@@ -90,7 +90,7 @@ int show_menu(char **menu_items, unsigned int item_count, char *title,
     }
     else
     {
-        if(w > SCREEN_W-1)
+        if(w > (unsigned)(SCREEN_W-1))
         {
             w = SCREEN_W-1;
             col = 1;
@@ -133,7 +133,7 @@ draw_win:
         locate(x+i, y);
         printw("%*s", w-2, " ");
         locate(x+i, y);
-        int len = strlen(menu_items[j]);
+        size_t len = strlen(menu_items[j]);
 
         if(len > w-2)
         {

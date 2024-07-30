@@ -70,7 +70,7 @@ void flip_glyph_horizontally(struct font_s *font)
 {
     unsigned char *data = font->data;
     data += get_glyph_index(font);
-    int h = font->charsize/font->height;
+    unsigned int h = font->charsize/font->height;
     unsigned int i, j, k;
 
     /*
@@ -129,7 +129,7 @@ void flip_glyph_vertically(struct font_s *font)
     int h = font->charsize/font->height;
     int i, j;
 
-    for(i = 0; i < font->charsize/2; i += h)
+    for(i = 0; i < (int)(font->charsize/2); i += h)
     {
         unsigned int line = 0, line2 = 0;
 
@@ -227,12 +227,12 @@ void export_glyphs(struct font_s *font, int as_c_file)
         fprintf(f, "\nuint8_t fontdata[] =\n{\n");
     }
 
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         if(as_c_file) fprintf(f, "  /* %4d */  ", i);
         else          fprintf(f, "\nchar %d:\n", i);
 
-        for(j = 0; j < font->height; j++)
+        for(j = 0; j < (int)font->height; j++)
         {
             if(as_c_file)
             {

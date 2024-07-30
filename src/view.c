@@ -24,8 +24,8 @@
 #include "glyph.h"
 #include "modules/psf.h"
 
-struct window_s left_window = { 0, 0, 0, 0, 0, 0 };
-struct window_s right_window = { 0, 0, 0, 0, 0, 0 };
+struct window_s left_window = { 0, 0, 0, 0, 0, 0, 0, 0, 0, { 0, }, { 0, }, NULL };
+struct window_s right_window = { 0, 0, 0, 0, 0, 0, 0, 0, 0, { 0, }, { 0, }, NULL };
 struct window_s *active_window;
 
 unsigned short utf_mask[] = { 192, 224, 240 };
@@ -153,7 +153,7 @@ void refresh_right_window(struct font_s *font)
 
     i = right_window.first_vis_row*right_window.cols_per_row;
 
-    while(i < font->length)
+    while(i < (int)font->length)
     {
         if(right_window.cursor.row == row && right_window.cursor.col == col)
             setScreenColors(BLACK, BGWHITE);
@@ -214,7 +214,8 @@ void refresh_right_window(struct font_s *font)
 void refresh_left_window(struct font_s *font)
 {
     int bail_out = 0;
-    if((left_window.width < font->width+6) || (left_window.height < font->height+2))
+    if((left_window.width < (int)font->width+6) ||
+       (left_window.height < (int)font->height+2))
     {
         msgBox("Can't display glyph. Font metrics\n"
                "(width or height) larger than screen\n"
@@ -253,8 +254,8 @@ void refresh_left_window(struct font_s *font)
     else if(font->width > 8 && font->width < 16) base_index <<= (16-font->width);
     else if(font->width > 16 && font->width < 32) base_index <<= (32-font->width);
 
-    /* Then draw glyph */
-    for(j = 0; j < font->height; j++)
+    /* Then draw the glyph */
+    for(j = 0; j < (int)font->height; j++)
     {
         unsigned int line, index;
         index = base_index;
@@ -297,7 +298,7 @@ void refresh_left_window(struct font_s *font)
         /* now print individual bits */
         int k;
 
-        for(k = 0; k < font->width; k++)
+        for(k = 0; k < (int)font->width; k++)
         {
             if(active_window == &left_window)
             {
@@ -338,6 +339,11 @@ void create_status_msg(char *smsg, char *msg, struct font_s *font)
 
     smsg[0] = '\0';
     m[0] = '\0';
+
+    if(font->version == VER_CP)
+    {
+        sprintf(m, "[%d/%d] ", font->cp_active_font+1, font->cp_total_fonts);
+    }
   
     if(font->has_unicode_table)
     {
@@ -356,13 +362,6 @@ void create_status_msg(char *smsg, char *msg, struct font_s *font)
         {
             sprintf(t, "U+%04x ", font->unicode_table[j*2]);
             strcat(m, t);
-        }
-    }
-    else
-    {
-        if(font->version == VER_CP)
-        {
-            sprintf(m, "[%d/%d]", font->cp_active_font+1, font->cp_total_fonts);
         }
     }
   

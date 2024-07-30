@@ -116,14 +116,14 @@ struct font_s *load_font_file(char *file_name)
     {
         font = mod->load_font_file(file_name);
 
-        if(font && left_window.width < font->width)
+        if(font && left_window.width < (int)font->width)
         {
             status_error("Error: Font width is larger than screen width");
             //msgBox("Font width is larger than screen width.", OK, ERROR);
             goto end;
         }
 
-        if(font && left_window.height < font->height)
+        if(font && left_window.height < (int)font->height)
         {
             status_error("Error: Font height is larger than screen height");
             //msgBox("Font height is larger than screen height.", OK, ERROR);
@@ -304,7 +304,7 @@ void get_font_unicode_table(struct font_s *font)
             } while(j++ < MAX_UNICODE_TABLE_ENTRIES);
             //i--;
         }
-    } while(i < font->length);
+    } while(i < (int)font->length);
 }
 
 
@@ -329,7 +329,7 @@ void free_unicode_table(struct font_s *font)
     if(!font->unicode_table_index) return;
     int i = 0;
 
-    while(i < font->length)
+    while(i < (int)font->length)
     {
         if(font->unicode_table_index[i] == 0xFFFF)
         {
@@ -486,7 +486,7 @@ int create_empty_unitab(struct font_s *font)
 
 int create_char_info(struct font_s* font)
 {
-    int sz = font->length*sizeof(struct char_info_s);
+    unsigned int sz = font->length*sizeof(struct char_info_s);
     if(font->char_info) free(font->char_info);
     struct char_info_s *char_info = (struct char_info_s *)malloc(sz);
     if(!char_info) return 0;

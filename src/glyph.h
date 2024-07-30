@@ -44,6 +44,6 @@ void glyphop_rotate_ccw(struct font_s *font);
 
 /* glyphinfo.c */
 void show_glyph_info(struct font_s *font);
-int glyph_index(struct font_s *font);
+int glyph_index();
 
 #endif

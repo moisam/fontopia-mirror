@@ -62,7 +62,7 @@ static inline unsigned int set_bit_index(unsigned int i)
 {
     int j;
 
-    for(j = 0; j < sizeof(unsigned int)*8; j++)
+    for(j = 0; j < (int)(sizeof(unsigned int)*8); j++)
     {
         if(i & (1 << j)) return j;
     }
@@ -76,7 +76,7 @@ void glyphop_center_horz(struct font_s *font)
     unsigned char *data = font->data;
     data += get_glyph_index(font);
     unsigned char *data2 = data;
-    int h = font->charsize/font->height;
+    unsigned int h = font->charsize/font->height;
     unsigned int i, j, k;
     unsigned int base_index = (1 << (font->width - 1));
     unsigned int index, line;
@@ -185,7 +185,7 @@ void glyphop_center_vert(struct font_s *font)
     int i, j, k;
     int uedge = font->height-1, ledge = 0;
 
-    for(i = 0; i < font->height; i++)
+    for(i = 0; i < (int)font->height; i++)
     {
         unsigned int line = 0;
         for(j = 0; j < h; j++)
@@ -202,7 +202,7 @@ void glyphop_center_vert(struct font_s *font)
     }
     
     // check glyph data is not stretching all the way from top to bottom edges
-    if((uedge == font->height-1) && (ledge == 0))
+    if((uedge == (int)font->height-1) && (ledge == 0))
     {
         return;
     }
@@ -236,7 +236,7 @@ void glyphop_center_vert(struct font_s *font)
             memcpy(data, data+j, h);
             data += h;
         }
-        for( ; i < font->height; i++)
+        for( ; i < (int)font->height; i++)
         {
             memset(data, 0, h);
             data += h;
@@ -267,9 +267,9 @@ void glyphop_rotate_ccw(struct font_s *font)
     data += get_glyph_index(font);
     unsigned char *data2 = data;
     int gindex = glyph_index(font);
-    int gw = char_info ? char_info[gindex].dwidthX : font->width;
+    int gw = char_info ? char_info[gindex].dwidthX : (int)font->width;
     int gh = char_info ? char_info[gindex].charAscent+char_info[gindex].charDescent :
-                         font->height;
+                         (int)font->height;
     int skipbytes = (font->width-gw+7)/8;
     int w = (gw+7)/8;
     int w2 = (font->width+7)/8;
@@ -293,9 +293,9 @@ void glyphop_rotate_ccw(struct font_s *font)
         for(j = 0; j < gw; j++)
         {
             l2 = l1+j;
-            if(l2 < 0 || l2 >= font->height) continue;
+            if(l2 < 0 || l2 >= (int)font->height) continue;
             c2 = c1-i;
-            if(c2 < 0 || c2 >= font->width) break;
+            if(c2 < 0 || c2 >= (int)font->width) break;
             int byte = (l2*w2)+(c2/8);      // index to dest byte
             int bitindex  = 1 << (c2%8);
             if(line & (1 << j))
@@ -320,9 +320,9 @@ void glyphop_rotate_cw(struct font_s *font)
     data += get_glyph_index(font);
     unsigned char *data2 = data;
     int gindex = glyph_index(font);
-    int gw = char_info ? char_info[gindex].dwidthX : font->width;
+    int gw = char_info ? char_info[gindex].dwidthX : (int)font->width;
     int gh = char_info ? char_info[gindex].charAscent+char_info[gindex].charDescent :
-                         font->height;
+                         (int)font->height;
     int skipbytes = (font->width-gw+7)/8;
     int w = (gw+7)/8;
     int w2 = (font->width+7)/8;
@@ -347,9 +347,9 @@ void glyphop_rotate_cw(struct font_s *font)
         for(j = 0; j < gw; j++)
         {
             l2 = l1-j;
-            if(l2 < 0 || l2 >= font->height) continue;
+            if(l2 < 0 || l2 >= (int)font->height) continue;
             c2 = c1+i;
-            if(c2 < 0 || c2 >= font->width) break;
+            if(c2 < 0 || c2 >= (int)font->width) break;
             int byte = (l2*w2)+(c2/8);      // index to dest byte
             int bitindex  = 1 << (c2%8);
             if(line & (1 << j))

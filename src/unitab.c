@@ -24,7 +24,7 @@
 #include "modules/cp.h"
 
 int patch_font_unicode(struct font_s *font, unsigned short *new_unicode,
-               int new_font_length, long new_unicode_bytes);
+                       unsigned int new_font_length, long new_unicode_bytes);
 
 
 
@@ -76,7 +76,7 @@ int import_unitab_from_file(struct font_s *font, char *file_name)
   
     if(!new_font->has_unicode_table)
     {
-        if(new_font->version != VER_CP)
+        //if(new_font->version != VER_CP)
         {
             status_error("Font has no unicode table");
             goto cancelled;
@@ -126,7 +126,7 @@ cancelled:
 
 
 int patch_font_unicode(struct font_s *font, unsigned short *new_unicode,
-               int new_font_length, long new_unicode_bytes)
+                       unsigned int new_font_length, long new_unicode_bytes)
 {
     void *old_unicode = font->unicode_info;
     long old_unicode_bytes = font->unicode_info_size;
@@ -171,7 +171,7 @@ int patch_font_unicode(struct font_s *font, unsigned short *new_unicode,
         draft = (unsigned short *)malloc(draft_bytes);
         if(!draft) goto error;
         unsigned short u;
-        int i = 0;
+        unsigned int i = 0;
         int cnt = 0;
 
         /*
@@ -285,7 +285,7 @@ int patch_font_unicode(struct font_s *font, unsigned short *new_unicode,
                      * memory to our draft array. we will need to realloc it.
                      */
                     int bytes = 0;
-                    while(font->unicode_info[old_index+bytes] != PSF1_SEPARATOR) bytes++;
+                    while(font->unicode_info[old_index+bytes] != PSF2_SEPARATOR) bytes++;
                     /* add extra byte for the separator */
                     bytes = (bytes+1) * sizeof(unsigned short);
                     draft = (unsigned short *)realloc(draft, draft_bytes+bytes);
@@ -429,9 +429,9 @@ int get_next_entry_in_line(char *line, unsigned int *res)
 
 void import_unitab(struct font_s *font)
 {
-    if(font->version == VER_CP)
+    if(font->version == VER_CP || font->version == VER_RAW)
     {
-        status_error("Cannot import unicode table to CP font");
+        status_error("The current font format does not support Unicode tables");
         return;
     }
 
@@ -517,13 +517,13 @@ read:
                  "contains %d glyph entries.", i, font->length);
     len = i;
 
-    if(i == font->length)
+    if(i == (int)font->length)
     {
         if(font->has_unicode_table)
             strcat(buf, "\nNew entries will overwrite existing ones.");
         strcat(buf, "\nProceed?");
     }
-    else if(i < font->length)
+    else if(i < (int)font->length)
     {
         if(font->has_unicode_table)
             strcat(buf, "\nRemaining entries in your font will not be changed.");
@@ -657,7 +657,7 @@ void export_unitab(struct font_s *font)
     char t[16];
     char m[(MAX_UNICODE_TABLE_ENTRIES*7)+1];
 
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         m[0] = '\0';
         if(font->unicode_table_index[i] == 0xFFFF)
@@ -829,7 +829,7 @@ refresh:
             case(DOWN_KEY):
                 if(selected_entry == vis_entries-1)
                 {
-                    if(selected_entry+first_entry == font->length-1) break;
+                    if(selected_entry+first_entry == (int)font->length-1) break;
                     first_entry++;
                 }
                 else selected_entry++;

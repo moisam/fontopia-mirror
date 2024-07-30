@@ -41,7 +41,7 @@ char *info_str[] =
 int info_str_count = sizeof(info_str)/sizeof(char *);
 
 
-int glyph_index(struct font_s *font)
+int glyph_index()
 {
     int r = right_window.cursor.row+right_window.first_vis_row;
     return (r*right_window.cols_per_row + right_window.cursor.col);
