@@ -319,8 +319,13 @@ other.
 
 BDF fonts are text files that @b{usually} start with a line similar to @code{STARTFONT 2.1},
 but this is not always the case, and the fonts do not otherwise have a file signature.
-The only way fontopia recognizes a BDF font is if it has a @code{.BDF} extension.
+The only way fontopia recognizes a BDF font is if it has a @code{.bdf} extension.
 If your BDF font does not have this extension, this is the likely cause of your problem.
+
+@heading Why is fontopia not able to open my Code Page (CP) font file?
+
+Same issue as for BDF fonts. Save your font with a @code{.cp} extension, and 
+everything should work as expected.
 
 @heading How can I export the text representation of my font's glyphs?
 
