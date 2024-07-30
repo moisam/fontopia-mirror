@@ -33,14 +33,14 @@ void reverse_glyph_rows(struct font_s *font)
 {
     int i, j, k;
     int line_bytes = (font->width + 7) / 8;
-    char *data = font->data, *d;
+    char *data = (char *)font->data, *d;
     char buf[font->charsize], *p;
 
     if(big_endian) return;
 
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
-        for(d = data, p = buf, j = 0; j < font->height; j++)
+        for(d = data, p = buf, j = 0; j < (int)font->height; j++)
         {
             for(k = 0; k < line_bytes; k++)
             {
@@ -306,12 +306,12 @@ int raw_write_to_file(FILE *file, struct font_s *font)
 
     int i, j, k;
     int line_bytes = (font->width + 7) / 8;
-    char *data = font->data;
+    char *data = (char *)font->data;
     char buf[font->charsize], *p;
 
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
-        for(p = buf, j = 0; j < font->height; j++)
+        for(p = buf, j = 0; j < (int)font->height; j++)
         {
             for(k = 0; k < line_bytes; k++)
             {
@@ -367,9 +367,9 @@ void raw_export_unitab(struct font_s *font, FILE *f)
 }
 */
 
-int raw_create_unitab(struct font_s *font)
+int raw_create_unitab(struct font_s *font __attribute__((unused)))
 {
-    status_error("Raw font has no unicode table");
+    status_error("Raw fonts have no unicode table");
     return 0;
 }
 
@@ -383,14 +383,14 @@ void raw_kill_unitab(struct font_s *font)
 }
 
 
-void raw_handle_unicode_table_change(struct font_s *font, char old_has_unicode_table)
+void raw_handle_unicode_table_change(struct font_s *font)
 {
     /***********************/
     /* remove unicode info */
     /***********************/
     if(!font->has_unicode_table)
     {
-        raw_kill_unitab(font);
+        //raw_kill_unitab(font);
     }
     else
     {
@@ -399,7 +399,8 @@ void raw_handle_unicode_table_change(struct font_s *font, char old_has_unicode_t
 }
 
 
-void raw_handle_version_change(struct font_s *font, char old_version)
+void raw_handle_version_change(struct font_s *font, 
+                               char old_version __attribute__((unused)))
 {
     font->header_size = 0;
     if(font->file_hdr) free(font->file_hdr);
@@ -507,8 +508,8 @@ void raw_init_module()
     raw_module.handle_version_change = raw_handle_version_change;
     raw_module.handle_unicode_table_change = raw_handle_unicode_table_change;
     raw_module.export_unitab = NULL; //raw_export_unitab;
-    raw_module.create_unitab = raw_create_unitab;
-    raw_module.kill_unitab = raw_kill_unitab;
+    //raw_module.create_unitab = raw_create_unitab;
+    //raw_module.kill_unitab = raw_kill_unitab;
     raw_module.convert_to_psf = raw_convert_to_psf;
     raw_module.make_utf16_unitab = NULL;
     raw_module.is_acceptable_width = raw_is_acceptable_width;

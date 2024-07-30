@@ -173,13 +173,13 @@ end:
 int cp_write_to_file(FILE *file, struct font_s *font)
 {
     if(!file || !font) return 1;
-    int res;
+    size_t res;
     /* 1- write the header */
     res = fwrite(font->file_hdr, 1, font->header_size, file);
     if(res != font->header_size) return 1;
     /* 2- write glyph data */
     res = fwrite(font->raw_data, 1, font->raw_data_size, file);
-    if(res != font->raw_data_size) return 1;
+    if(res != (size_t)font->raw_data_size) return 1;
     return 0;
 }
 
@@ -239,6 +239,9 @@ struct font_s *cp_load_font(char *file_name, unsigned char *file_data, long file
     struct font_s *font = (struct font_s *)NULL;
     struct cp_header *hdr = (struct cp_header *)file_data;
     int i;
+
+    (void)file_name;
+
     /* Basic error checking */
     if(!hdr->entry_hdr.cpeh_size) goto corrupt_file;
     if(hdr->entry_hdr.device_type != 1 && hdr->entry_hdr.device_type != 2)
@@ -290,8 +293,8 @@ struct font_s *cp_load_font(char *file_name, unsigned char *file_data, long file
     font->cp_total_fonts = hdr->info_hdr.num_fonts;
     
     font->has_unicode_table = 1;
-    font->utf_version = 1;
-    cp_handle_unicode_table_change(font, font->has_unicode_table);
+    font->utf_version = VER_PSF1;
+    cp_handle_unicode_table_change(font);
     
     font->state = OPENED;
     calc_max_zoom(font);
@@ -614,7 +617,7 @@ void cp_kill_unitab(struct font_s *font)
 }
 
 
-void cp_handle_unicode_table_change(struct font_s *font, char old_has_unicode_table)
+void cp_handle_unicode_table_change(struct font_s *font)
 {
     /***********************/
     /* remove unicode info */
@@ -638,7 +641,7 @@ void cp_handle_unicode_table_change(struct font_s *font, char old_has_unicode_ta
         int i, j = 0;
         unsigned short *data = (unsigned short *)font->unicode_info;
 
-        for(i = 0; i < font->length; i++)
+        for(i = 0; i < (int)font->length; i++)
         {
             unsigned int d = font->unicode_table[i*2];
             data[j  ] = (unsigned short)d;
@@ -646,7 +649,7 @@ void cp_handle_unicode_table_change(struct font_s *font, char old_has_unicode_ta
             j += 2;
         }
 
-        font->utf_version = 1;
+        font->utf_version = VER_PSF1;
         //status_error("CP fonts have no Unicode tables");
     }
 
@@ -747,11 +750,12 @@ void cp_change_codepage(struct font_s *font)
     hdr->entry_hdr.codepage = codepage;
     cp_kill_unitab(font);
     font->has_unicode_table = 1;
-    cp_handle_unicode_table_change(font, font->has_unicode_table);
+    cp_handle_unicode_table_change(font);
 }
 
 
-void cp_handle_version_change(struct font_s *font, char old_version)
+void cp_handle_version_change(struct font_s *font, 
+                              char old_version __attribute__((unused)))
 {
     struct cp_header *hdr = (struct cp_header *)malloc(sizeof(struct cp_header));
     if(!hdr)
@@ -812,7 +816,7 @@ void cp_handle_version_change(struct font_s *font, char old_version)
     font->raw_data_size = sz;
     cp_kill_unitab(font);
     font->has_unicode_table = 1;
-    cp_handle_unicode_table_change(font, font->has_unicode_table);
+    cp_handle_unicode_table_change(font);
     font->cp_active_font = 0;
     font->cp_total_fonts = 1;
 }
@@ -888,7 +892,7 @@ void cp_convert_to_psf(struct font_s *font)
         unicode_table[draft_index++] = 0xFFFF;
     }
 
-    font->utf_version = 1;
+    font->utf_version = VER_PSF1;
     font->unicode_info_size = draft_bytes;
     font->has_unicode_table = 1;
     font->unicode_info = (unsigned char *)unicode_table;
@@ -907,7 +911,7 @@ int cp_is_acceptable_width(struct font_s *font)
     return (font->width == 8);
 }
 
-int cp_next_acceptable_width(struct font_s *font)
+int cp_next_acceptable_width(struct font_s *font __attribute__((unused)))
 {
     return 8;
 }
@@ -948,8 +952,8 @@ void cp_init_module()
     cp_module.handle_version_change = cp_handle_version_change;
     cp_module.handle_unicode_table_change = cp_handle_unicode_table_change;
     cp_module.export_unitab = cp_export_unitab;
-    cp_module.create_unitab = cp_create_unitab;
-    cp_module.kill_unitab = cp_kill_unitab;
+    //cp_module.create_unitab = cp_create_unitab;
+    //cp_module.kill_unitab = cp_kill_unitab;
     cp_module.convert_to_psf = cp_convert_to_psf;
     cp_module.make_utf16_unitab = cp_make_utf16_unitab;
     cp_module.is_acceptable_width = cp_is_acceptable_width;

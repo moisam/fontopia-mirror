@@ -246,7 +246,7 @@ int alloc_font_charinfo(struct font_s *font, int fill_with_ff)
         if(fill_with_ff)
         {
             int i;
-            for(i = 0; i < font->length; i++)
+            for(i = 0; i < (int)font->length; i++)
                 char_info[i].encoding = 0xff;
         }
         font->char_info = (void *)char_info;
@@ -268,8 +268,11 @@ int alloc_font_data(struct font_s *font)
     return 1;
 }
 
-struct font_s *pcf_load_font(char *file_name, unsigned char *file_data, long file_size)
+struct font_s *pcf_load_font(char *file_name, unsigned char *file_data,
+                             long file_size __attribute__((unused)))
 {
+    (void)file_name;
+
     struct font_s *font = (struct font_s *)NULL;
     font = (struct font_s *)malloc(sizeof(struct font_s));
     if(!font) goto memory_error;
@@ -349,7 +352,7 @@ struct font_s *pcf_load_font(char *file_name, unsigned char *file_data, long fil
         struct char_info_s *char_info = font->char_info;
         int maxw = 0;
 
-        for(i = 0; i < font->length; i++)
+        for(i = 0; i < (int)font->length; i++)
         {
             if(char_info[i].dwidthX > maxw) maxw = char_info[i].dwidthX;
         }
@@ -470,7 +473,7 @@ int table_get_int(int n, int swapbytes, int swapbits)
         {
             int i;
             int n2 = 0;
-            for(i = 0; i < sizeof(int); i++)
+            for(i = 0; i < (int)sizeof(int); i++)
             {
                 n2 |= ((int)reverse_char(n & 0xff) << (i*8));
                 n >>= 8;
@@ -714,7 +717,7 @@ int get_accel_table(char *table_data, struct font_s *font)
         struct char_info_s *char_info = font->char_info;
         int maxw = 0;
 
-        for(i = 0; i < font->length; i++)
+        for(i = 0; i < (int)font->length; i++)
         {
             char_info[i].lBearing = 0;
             char_info[i].rBearing = char_info[i].dwidthX;
@@ -1160,7 +1163,7 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
     tables[5].offset = tables[4].offset + tables[4].size;
     // get the minimum and maximum encodings
     int min = 0, max = 0;
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         /*
          * TODO: This is an awful hack. Sometimes the font contains out-of-range
@@ -1170,7 +1173,8 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
          *       encodings array boundaries and will probably SIGSEGV or SIGABRT).
          *       This needs to be FIXED!
          */
-        if(char_info[i].encoding >= font->length) char_info[i].encoding = font->length-1;
+        if(char_info[i].encoding >= (int)font->length) 
+            char_info[i].encoding = font->length-1;
 
         j = char_info[i].encoding;
         if(j < min) min = j;
@@ -1204,7 +1208,7 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
     tables[6].size   = 4*font->length + 8;
 
     // fix the numbers to be LSB
-    for(i = 0; i < tabcount; i++)
+    for(i = 0; i < (int)tabcount; i++)
     {
         file_write_lsbint(tables[i].type  , file);
         file_write_lsbint(tables[i].format, file);
@@ -1289,7 +1293,7 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
     res = file_write_lsbint(tables[2].format, file);
     j = font->length;
     res = file_write_lsbint(j, file);
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         bounds = (struct uncompressed_metrics)
                 { 
@@ -1306,7 +1310,7 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
     j = 0;
 
     // write the offsets into bitmap data
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         res = file_write_lsbint(j, file);
         j += (font->height << 2);
@@ -1321,9 +1325,9 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
 
 //restoreTerminal();
     int m = (font->width+7)/8;
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
-        for(j = 0; j < font->height; j++)
+        for(j = 0; j < (int)font->height; j++)
         {
             unsigned int line = 0;
             int l;
@@ -1348,7 +1352,7 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
     res = file_write_lsbint(tables[4].format, file);
     j = font->length;
     res = file_write_lsbint(j, file);
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         bounds = (struct uncompressed_metrics)
             { 
@@ -1406,7 +1410,7 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
     u_int16_t *encodings = (u_int16_t *)malloc(enc_len);
     if(!encodings) return 1;
     memset(encodings, 0xff, enc_len);
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         int enc1 = (char_info[i].encoding >> 8) & 0xff;
         int enc2 = char_info[i].encoding & 0xff;
@@ -1426,7 +1430,7 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
     res = file_write_lsbint(tables[6].format, file);
     j = font->length;
     res = file_write_lsbint(j, file);
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         if(char_info[i].swidthX == 0) char_info[i].swidthX = DEFAULT_SWIDTH;
         res = file_write_lsbint(char_info[i].swidthX, file);
@@ -1442,9 +1446,10 @@ int pcf_write_to_file(FILE *file, struct font_s *font)
 
 void pcf_handle_hw_change(struct font_s *font, char *newdata, long new_datasize)
 {
-    return bdf_handle_hw_change(font, newdata, new_datasize);
+    bdf_handle_hw_change(font, newdata, new_datasize);
 }
 
+/*
 int pcf_create_unitab(struct font_s *font)
 {
     return bdf_create_unitab(font);
@@ -1455,11 +1460,11 @@ void pcf_kill_unitab(struct font_s *font)
     bdf_kill_unitab(font);
 }
 
-
 void pcf_handle_unicode_table_change(struct font_s *font, char old_has_unicode_table)
 {
     bdf_handle_unicode_table_change(font, old_has_unicode_table);
 }
+*/
 
 
 void pcf_handle_version_change(struct font_s *font, char old_version)
@@ -1515,7 +1520,7 @@ int pcf_next_acceptable_height(struct font_s *font)
  * ******************************/
 struct module_s pcf_module;
 
-struct file_sig_s pcf_sig = { 0, 4, { 1, 'f', 'c', 'p' } };
+struct file_sig_s pcf_sig = { 0, 4, { 1, 'f', 'c', 'p' }, NULL, NULL, NULL };
 
 void pcf_init_module()
 {
@@ -1532,10 +1537,10 @@ void pcf_init_module()
     pcf_module.expand_glyphs = pcf_expand_glyphs;
     pcf_module.update_font_hdr = NULL;
     pcf_module.handle_version_change = pcf_handle_version_change;
-    pcf_module.handle_unicode_table_change = pcf_handle_unicode_table_change;
+    pcf_module.handle_unicode_table_change = NULL; //pcf_handle_unicode_table_change;
     pcf_module.export_unitab = NULL; //pcf_export_unitab;
-    pcf_module.create_unitab = pcf_create_unitab;
-    pcf_module.kill_unitab = pcf_kill_unitab;
+    //pcf_module.create_unitab = NULL; //pcf_create_unitab;
+    //pcf_module.kill_unitab = NULL; //pcf_kill_unitab;
     pcf_module.convert_to_psf = pcf_convert_to_psf;
     pcf_module.is_acceptable_width = pcf_is_acceptable_width;
     pcf_module.next_acceptable_width = pcf_next_acceptable_width;

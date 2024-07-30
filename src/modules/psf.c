@@ -81,8 +81,8 @@ struct font_s *psf_create_empty_font()
     memset((void *)font, 0, sizeof(struct font_s));
 
     font->length = 256;
-    font->has_unicode_table = PSF1_MODEHASTAB;
-    font->utf_version = 1;
+    font->has_unicode_table = 1;
+    font->utf_version = VER_PSF1;
     font->height   = 16;
     font->width    = 8;
     font->charsize = font->height;
@@ -99,7 +99,7 @@ struct font_s *psf_create_empty_font()
 
     int i, j = 0;
     unsigned short *data = (unsigned short *)font->unicode_info;
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         data[j  ] = default_unicode_table[i];
         data[j+1] = 0xFFFF;
@@ -139,13 +139,13 @@ int psf_write_to_file(FILE *file, struct font_s *font)
 
     /* 1- write the header */
     res = fwrite(font->file_hdr, 1, font->header_size, file);
-    if(res != font->header_size) return 1;
+    if(res != (int)font->header_size) return 1;
 
     /* 2- write glyph data */
     if(font->width <= 8)
     {
         res = fwrite(font->data, 1, font->data_size, file);
-        if(res != font->data_size) return 1;
+        if(res != (int)font->data_size) return 1;
     }
     else
     {
@@ -153,7 +153,7 @@ int psf_write_to_file(FILE *file, struct font_s *font)
         if(font->width <= 16)
         {
             int i;
-            for(i = 0; i < font->data_size; i += 2)
+            for(i = 0; i < (int)font->data_size; i += 2)
             {
                 res = fputc(font->data[i+1], file);
                 res = fputc(font->data[i  ], file);
@@ -162,7 +162,7 @@ int psf_write_to_file(FILE *file, struct font_s *font)
         else if(font->width <= 32)
         {
             int i;
-            for(i = 0; i < font->data_size; i += 4)
+            for(i = 0; i < (int)font->data_size; i += 4)
             {
                 res = fputc(font->data[i+3], file);
                 res = fputc(font->data[i+2], file);
@@ -193,7 +193,7 @@ int psf_write_to_file(FILE *file, struct font_s *font)
                 unsigned short ss = 0xFE;
                 unsigned char c[5];
 
-                while(i < font->length)
+                while(i < (int)font->length)
                 {
                     if(u[j] == 0xFFFF)
                     {
@@ -238,7 +238,7 @@ int psf_write_to_file(FILE *file, struct font_s *font)
                 unsigned short term = 0xFFFF;
                 unsigned short ss = 0xFFFE;
 
-                while(i < font->length)
+                while(i < (int)font->length)
                 {
                     if(u[j] == 0xFF)
                     {
@@ -314,6 +314,8 @@ struct font_s *psf_load_font(char *file_name, unsigned char *file_data, long fil
     struct font_s *font = (struct font_s *)NULL;
     struct psf2_header *hdr = (struct psf2_header *)file_data;
     struct psf1_header *hdr_old = (struct psf1_header *)hdr;
+
+    (void)file_name;
     
     font = (struct font_s *)malloc(sizeof(struct font_s));
     if(!font) goto memory_error;
@@ -335,7 +337,7 @@ struct font_s *psf_load_font(char *file_name, unsigned char *file_data, long fil
         memcpy((void *)file_hdr, (void *)hdr, sizeof(struct psf2_header));
         font->file_hdr = file_hdr;
         font->header_size = hdr->headersize;
-        font->utf_version = 2;
+        font->utf_version = VER_PSF2;
         expected_file_size = hdr->headersize;
     }
     /* Is it PSF1? */
@@ -354,7 +356,7 @@ struct font_s *psf_load_font(char *file_name, unsigned char *file_data, long fil
         memcpy((void *)file_hdr, (void *)hdr_old, sizeof(struct psf1_header));
         font->file_hdr = file_hdr;
         font->header_size = sizeof(struct psf1_header);
-        font->utf_version = 1;
+        font->utf_version = VER_PSF1;
         expected_file_size = sizeof(struct psf1_header);
     }
     else
@@ -396,7 +398,7 @@ struct font_s *psf_load_font(char *file_name, unsigned char *file_data, long fil
         if(font->width <= 16)
         {
             int i;
-            for(i = 0; i < font->data_size; i += 2)
+            for(i = 0; i < (int)font->data_size; i += 2)
             {
                 unsigned char c = font->data[i];
                 font->data[i] = font->data[i+1];
@@ -406,7 +408,7 @@ struct font_s *psf_load_font(char *file_name, unsigned char *file_data, long fil
         else if(font->width <= 32)
         {
             int i;
-            for(i = 0; i < font->data_size; i += 4)
+            for(i = 0; i < (int)font->data_size; i += 4)
             {
                 unsigned char c = font->data[i];
                 font->data[i] = font->data[i+3];
@@ -506,7 +508,7 @@ void psf_handle_hw_change(struct font_s *font, char *newdata, long new_datasize)
 }
 
 
-void psf_shrink_glyphs(struct font_s *font, int old_length)
+void psf_shrink_glyphs(struct font_s *font, int old_length __attribute__((unused)))
 {
     long new_datasize = font->length * font->charsize;
     unsigned int unicode_size = 0;
@@ -637,7 +639,7 @@ void psf_expand_glyphs(struct font_s *font, int old_length, int option)
     free(font->data);
     font->data = (unsigned char *)(new_rawdata);
 
-    unsigned char *data = (unsigned char *)(new_rawdata+old_datasize);
+    unsigned char *data = (unsigned char *)new_rawdata + old_datasize;
     int count = new_datasize-old_datasize;
 
     /* Roll over */
@@ -708,27 +710,13 @@ void psf_expand_glyphs(struct font_s *font, int old_length, int option)
 }
 
 
-void psf_handle_unicode_table_change(struct font_s *font, char old_has_unicode_table)
+void psf_handle_unicode_table_change(struct font_s *font)
 {
     /***********************/
     /* remove unicode info */
     /***********************/
     if(!font->has_unicode_table)
     {
-        int res = msgBox("You chose to erase this font's Unicode table\n"
-                         "This means total & permanent LOSS of this information!\n"
-                         "Proceed?", BUTTON_YES|BUTTON_NO, CONFIRM);
-
-        if(res != BUTTON_YES)
-        {
-            font->has_unicode_table = old_has_unicode_table;
-            return;
-        }
-
-        if(font->unicode_info) free(font->unicode_info);
-        font->unicode_info = 0;
-        font->unicode_info_size = 0;
-        free_unicode_table(font);
         /* update header */
         psf_update_font_hdr(font);
     }
@@ -737,69 +725,17 @@ void psf_handle_unicode_table_change(struct font_s *font, char old_has_unicode_t
     /***************************/
     else
     {
-        unsigned int bytes = 0;
-
         if(font->version == VER_PSF1)
         {
-            bytes = font->length*4;
-        }
-        else if(font->version == VER_PSF2)
-        {
-            bytes = font->length*2;
-        }
-        else
-        {
-            return;
-        }
-
-        font->unicode_info_size = bytes;
-        font->unicode_info = (void *)malloc(font->unicode_info_size);
-
-        if(!font->unicode_info)
-        {
-            goto memory_error;
-        }
-
-        /* make the new table */
-        int i, j = 0;
-        if(font->version == VER_PSF1)
-        {
-            unsigned short *u = (unsigned short *)font->unicode_info;
-            for(i = 0; i < bytes/4; i++)
-            {
-                u[j] = 0;
-                u[j+1] = 0xFFFF;
-                j += 2;
-            }
-
             struct psf1_header *hdr = (struct psf1_header *)font->file_hdr;
             hdr->mode |= PSF1_MODEHASTAB;
         }
         else if(font->version == VER_PSF2)
         {
-            unsigned char *u = (unsigned char *)font->unicode_info;
-            for(i = 0; i < bytes/2; i++)
-            {
-                u[j] = 0;
-                u[j+1] = 0xFF;
-                j += 2;
-            }
-
             struct psf2_header *hdr = (struct psf2_header *)font->file_hdr;
             hdr->flags |= PSF2_HAS_UNICODE_TABLE;
         }
-
-        if(!create_empty_unitab(font)) goto memory_error;
-        get_font_unicode_table(font);
     }
-
-    force_font_dirty(font);
-    return;
-  
-memory_error:
-
-    font->has_unicode_table = old_has_unicode_table;
-    status_error("Insufficient memory to make new unicode table");
 }
 
 
@@ -823,7 +759,8 @@ void psf_update_font_hdr(struct font_s *font)
 }
 
 
-void psf_handle_version_change(struct font_s *font, char old_version)
+void psf_handle_version_change(struct font_s *font, 
+                               char old_version __attribute__((unused)))
 {
     if(font->version == VER_PSF1)
     {
@@ -880,22 +817,22 @@ long psf_make_utf16_unitab(struct font_s *new_font, unsigned short **_unicode_ta
     long unicode_table_len = 0;
     unsigned short *unicode_table = *_unicode_table;
 
-    if(new_font->utf_version == VER_PSF1)
+    if(new_font->utf_version != VER_PSF2)
     {
         unicode_table = (unsigned short *)malloc(new_font->unicode_info_size);
         if(!unicode_table) goto error;
         memcpy((void *)unicode_table, (void *)new_font->unicode_info, new_font->unicode_info_size);
         unicode_table_len = new_font->unicode_info_size;
     }
-    else if(new_font->utf_version == VER_PSF2)
+    else
     {
         long draft_index = 0;
         long draft_bytes = new_font->length*sizeof(unsigned short)*2;
         unicode_table = (unsigned short *)malloc(draft_bytes);
         if(!unicode_table) goto error;
-        int i = 0;
+        unsigned int i = 0;
         int cnt = 0;
-    
+
         unsigned int c = 0;
         new_font->unicode_array_index = 0;
         new_font->unicode_index = 0;
@@ -917,7 +854,7 @@ long psf_make_utf16_unitab(struct font_s *new_font, unsigned short **_unicode_ta
                 int bytes = 0;
                 while(new_font->unicode_info
                         [new_font->unicode_array_index+bytes] 
-                            != PSF1_SEPARATOR) bytes++;
+                            != PSF2_SEPARATOR) bytes++;
 
                 /* add extra byte for the separator */
                 bytes = (bytes+1) * sizeof(unsigned short);
@@ -1002,8 +939,11 @@ int psf_next_acceptable_height(struct font_s *font)
 /********************************
  * ******************************
  * ******************************/
-struct file_sig_s psf1_sig = { 0, 2, { PSF1_MAGIC0, PSF1_MAGIC1, 0 } };
-struct file_sig_s psf2_sig = { 0, 4, { PSF2_MAGIC0, PSF2_MAGIC1, PSF2_MAGIC2, PSF2_MAGIC3, 0 } };
+struct file_sig_s psf1_sig = { 0, 2, { PSF1_MAGIC0, PSF1_MAGIC1, 0 }, 
+                               NULL, NULL, NULL };
+struct file_sig_s psf2_sig = { 0, 4, { PSF2_MAGIC0, PSF2_MAGIC1, 
+                                       PSF2_MAGIC2, PSF2_MAGIC3, 0 },
+                               NULL, NULL, NULL };
 
 void psf_init_module()
 {
@@ -1022,8 +962,8 @@ void psf_init_module()
     first_module.handle_unicode_table_change = psf_handle_unicode_table_change;
     first_module.handle_version_change = psf_handle_version_change;
     first_module.export_unitab = NULL; //psf_export_unitab;
-    first_module.create_unitab = NULL; //psf_create_unitab;
-    first_module.kill_unitab = psf_kill_unitab;
+    //first_module.create_unitab = NULL; //psf_create_unitab;
+    //first_module.kill_unitab = psf_kill_unitab;
     first_module.convert_to_psf = psf_convert_to_psf;
     first_module.make_utf16_unitab = psf_make_utf16_unitab;
     first_module.is_acceptable_width = psf_is_acceptable_width;

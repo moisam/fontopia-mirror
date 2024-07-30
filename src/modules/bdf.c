@@ -40,9 +40,9 @@ struct bdf_keyword_s bdf_keywords[] =
   { "DWIDTH1",            BDF_REQ_NO,  BDF_ANY_SCOPE,    2, { NUMBER, NUMBER } },
   { "VVECTOR",            BDF_REQ_NO,  BDF_ANY_SCOPE,    2, { NUMBER, NUMBER } },
   { "STARTPROPERTIES",    BDF_REQ_NO,  BDF_GLOBAL_SCOPE, 1, { INTEGER } },
-  { "ENDPROPERTIES",      BDF_REQ_NO,  BDF_GLOBAL_SCOPE, 0 },
+  { "ENDPROPERTIES",      BDF_REQ_NO,  BDF_GLOBAL_SCOPE, 0, { 0 } },
   { "CHARS",              BDF_REQ_YES, BDF_GLOBAL_SCOPE, 1, { INTEGER } },
-  { "ENDFONT",            BDF_REQ_YES, BDF_GLOBAL_SCOPE, 0 },
+  { "ENDFONT",            BDF_REQ_YES, BDF_GLOBAL_SCOPE, 0, { 0 } },
   { "COPYRIGHT",          BDF_REQ_NO,  BDF_GLOBAL_SCOPE, 1, { STRING  } },
   { "FOUNDRY",            BDF_REQ_NO,  BDF_GLOBAL_SCOPE, 1, { STRING  } },
   { "FAMILY_NAME",        BDF_REQ_NO,  BDF_GLOBAL_SCOPE, 1, { STRING  } },
@@ -71,8 +71,8 @@ struct bdf_keyword_s bdf_keywords[] =
   { "STARTCHAR",          BDF_REQ_YES, BDF_GLYPH_SCOPE,  1, { STRING  } },
   { "ENCODING",           BDF_REQ_YES, BDF_GLYPH_SCOPE,  1, { INTEGER } },
   { "BBX",                BDF_REQ_YES, BDF_GLYPH_SCOPE,  4, { INTEGER, INTEGER, INTEGER, INTEGER } },
-  { "BITMAP",             BDF_REQ_YES, BDF_GLYPH_SCOPE,  0 },
-  { "ENDCHAR",            BDF_REQ_YES, BDF_GLYPH_SCOPE,  0 },
+  { "BITMAP",             BDF_REQ_YES, BDF_GLYPH_SCOPE,  0, { 0 } },
+  { "ENDCHAR",            BDF_REQ_YES, BDF_GLYPH_SCOPE,  0, { 0 } },
 };
 
 /* we will use this bitmap to check that all the required words
@@ -198,7 +198,7 @@ struct font_s *bdf_create_empty_font()
 
     font->length = 256;
     font->has_unicode_table = 1;
-    font->utf_version = 1;
+    font->utf_version = VER_PSF1;
     font->height   = 16;
     font->width    = 16;
     font->charsize = font->height*2;
@@ -214,11 +214,11 @@ struct font_s *bdf_create_empty_font()
     if(!font->unicode_info) goto memory_error;
     int i, j = 0;
     unsigned short *data = (unsigned short *)font->unicode_info;
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
-      data[j  ] = default_unicode_table[i];
-      data[j+1] = 0xFFFF;
-      j += 2;
+        data[j  ] = default_unicode_table[i];
+        data[j+1] = 0xFFFF;
+        j += 2;
     }
     create_empty_unitab(font);
     get_font_unicode_table(font);
@@ -297,16 +297,20 @@ end:
 }
 
 
-struct font_s *bdf_load_font(char *file_name, unsigned char *file_data, long file_size)
+struct font_s *bdf_load_font(char *file_name, unsigned char *file_data, 
+                             long file_size __attribute__((unused)))
 {
     struct font_s *font = (struct font_s *)NULL;
     font = (struct font_s *)malloc(sizeof(struct font_s));
     if(!font) goto memory_error;
+
+    (void)file_name;
+
     memset((void *)font, 0, sizeof(struct font_s));
     unsigned char *data = (unsigned char *)NULL;
     unsigned short *unicode_info = NULL;
     font->has_unicode_table = 1;
-    font->utf_version = 1;
+    font->utf_version = VER_PSF1;
     font->has_metadata = 1;
     font->metadata = (void *)malloc(sizeof(metadata_table));
     if(!font->metadata) goto memory_error;
@@ -332,7 +336,7 @@ struct font_s *bdf_load_font(char *file_name, unsigned char *file_data, long fil
     }
     */
 
-    char scope = BDF_GLOBAL_SCOPE;
+    int scope = BDF_GLOBAL_SCOPE;
     int w = 0, h = 0;
     int globalw = 0, globalh = 0;
     char globaln = 0;
@@ -660,7 +664,7 @@ struct font_s *bdf_load_font(char *file_name, unsigned char *file_data, long fil
                 while(i && (s = strtok(NULL, "\n")))
                 {
                     /* how many nibbles do we have per line? */
-                    char n = ((w+7)/8)*2;
+                    unsigned int n = ((w+7)/8)*2;
                     skip_spaces(&s);
                     //printf("0x%s: ", s);
                     if(strlen(s) < n) goto corrupt_file;
@@ -692,7 +696,7 @@ struct font_s *bdf_load_font(char *file_name, unsigned char *file_data, long fil
                 while(i--)
                 {
                     /* how many nibbles do we have per line? */
-                    char n = ((globalw+7)/8)*2;
+                    unsigned int n = ((globalw+7)/8)*2;
                     n >>= 1;
                     unsigned int j;
 
@@ -708,7 +712,7 @@ struct font_s *bdf_load_font(char *file_name, unsigned char *file_data, long fil
     } while((s = strtok(NULL, "\n")));
 
     /* check we got all chars */
-    if(chars != font->length) goto corrupt_file;
+    if(chars != (int)font->length) goto corrupt_file;
 
     /* make sure no vital keyword is missing */
     for(i = 0; i < BDF_TOTAL_KEYWORDS; i++)
@@ -792,24 +796,26 @@ int bdf_write_to_file(FILE *file, struct font_s *font)
                         meta[METADATA_FONTBOUNDINGBOX_XOFF].value,
                         meta[METADATA_FONTBOUNDINGBOX_YOFF].value);
 
+#define OPTIONAL_VAL(x)     meta[x].value2 ? meta[x].value2 : ""
+
     /* NOTE: change this number if we added more properties */
     res = fprintf(file, "STARTPROPERTIES 23\n");
-    res = fprintf(file, "COPYRIGHT \"%s\"\n", meta[METADATA_COPYRIGHT].value2 ? : "");
-    res = fprintf(file, "FONT_TYPE \"%s\"\n", meta[METADATA_FONT_TYPE].value2 ? : "");
-    res = fprintf(file, "FONT_VERSION \"%s\"\n", meta[METADATA_FONT_VERSION].value2 ? : "");
-    res = fprintf(file, "FOUNDRY \"%s\"\n", meta[METADATA_FOUNDRY].value2 ? : "");
-    res = fprintf(file, "FAMILY_NAME \"%s\"\n", meta[METADATA_FAMILY_NAME].value2 ? : "");
-    res = fprintf(file, "WEIGHT_NAME \"%s\"\n", meta[METADATA_WEIGHT_NAME].value2 ? : "");
-    res = fprintf(file, "SLANT \"%s\"\n", meta[METADATA_SLANT].value2 ? : "");
-    res = fprintf(file, "SETWIDTH_NAME \"%s\"\n", meta[METADATA_SETWIDTH_NAME].value2 ? : "");
+    res = fprintf(file, "COPYRIGHT \"%s\"\n", OPTIONAL_VAL(METADATA_COPYRIGHT));
+    res = fprintf(file, "FONT_TYPE \"%s\"\n", OPTIONAL_VAL(METADATA_FONT_TYPE));
+    res = fprintf(file, "FONT_VERSION \"%s\"\n", OPTIONAL_VAL(METADATA_FONT_VERSION));
+    res = fprintf(file, "FOUNDRY \"%s\"\n", OPTIONAL_VAL(METADATA_FOUNDRY));
+    res = fprintf(file, "FAMILY_NAME \"%s\"\n", OPTIONAL_VAL(METADATA_FAMILY_NAME));
+    res = fprintf(file, "WEIGHT_NAME \"%s\"\n", OPTIONAL_VAL(METADATA_WEIGHT_NAME));
+    res = fprintf(file, "SLANT \"%s\"\n", OPTIONAL_VAL(METADATA_SLANT));
+    res = fprintf(file, "SETWIDTH_NAME \"%s\"\n", OPTIONAL_VAL(METADATA_SETWIDTH_NAME));
     res = fprintf(file, "PIXEL_SIZE %d\n", meta[METADATA_PIXEL_SIZE].value);
     res = fprintf(file, "RESOLUTION_X %d\n", meta[METADATA_RESOLUTION_X].value);
     res = fprintf(file, "RESOLUTION_Y %d\n", meta[METADATA_RESOLUTION_Y].value);
-    res = fprintf(file, "SPACING \"%s\"\n", meta[METADATA_SPACING].value2 ? : "");
+    res = fprintf(file, "SPACING \"%s\"\n", OPTIONAL_VAL(METADATA_SPACING));
     res = fprintf(file, "ADD_STYLE_NAME %d\n", meta[METADATA_ADD_STYLE_NAME].value);
     res = fprintf(file, "AVERAGE_WIDTH %d\n", meta[METADATA_AVERAGE_WIDTH].value);
-    res = fprintf(file, "CHARSET_REGISTRY \"%s\"\n", meta[METADATA_CHARSET_REGISTRY].value2 ? : "");
-    res = fprintf(file, "CHARSET_ENCODING \"%s\"\n", meta[METADATA_CHARSET_ENCODING].value2 ? : "");
+    res = fprintf(file, "CHARSET_REGISTRY \"%s\"\n", OPTIONAL_VAL(METADATA_CHARSET_REGISTRY));
+    res = fprintf(file, "CHARSET_ENCODING \"%s\"\n", OPTIONAL_VAL(METADATA_CHARSET_ENCODING));
     res = fprintf(file, "UNDERLINE_POSITION %d\n", meta[METADATA_UNDERLINE_POSITION].value);
     res = fprintf(file, "UNDERLINE_THICKNESS %d\n", meta[METADATA_UNDERLINE_THICKNESS].value);
     res = fprintf(file, "CAP_HEIGHT %d\n", meta[METADATA_CAP_HEIGHT].value);
@@ -820,11 +826,13 @@ int bdf_write_to_file(FILE *file, struct font_s *font)
     res = fprintf(file, "ENDPROPERTIES\n");
     res = fprintf(file, "CHARS %d\n", font->length);
 
+#undef OPTIONAL_VAL
+
     int i, j, l;
     unsigned char *data = font->data;
     struct char_info_s *char_info = (struct char_info_s *)font->char_info;
 
-    for(i = 0; i < font->length; i++)
+    for(i = 0; i < (int)font->length; i++)
     {
         res = fprintf(file, "STARTCHAR ");
 
@@ -871,12 +879,12 @@ int bdf_write_to_file(FILE *file, struct font_s *font)
 
         res = fprintf(file, "BITMAP\n");
 
-        for(j = 0; j < font->height; j++)
+        for(j = 0; j < (int)font->height; j++)
         {
             unsigned int line2 = 0;
             unsigned int line = 0;
 
-            for(l = 0; l < (font->width+7)/8; l++)
+            for(l = 0; l < ((int)font->width+7)/8; l++)
             {
                 line = (line) | (unsigned int)data[l] << (l*8);
             }
@@ -926,7 +934,7 @@ void bdf_handle_hw_change(struct font_s *font, char *newdata, long new_datasize)
     {
         struct char_info_s *char_info = font->char_info;
         int i;
-        for(i = 0; i < font->length; i++)
+        for(i = 0; i < (int)font->length; i++)
         {
             char_info[i].dwidthX     = font->width;
             char_info[i].lBearing    = 0;
@@ -945,60 +953,9 @@ void bdf_export_unitab(struct font_s *font, FILE *f)
 }
 */
 
-int bdf_create_unitab(struct font_s *font)
-{
-    font->has_unicode_table = 1;
-    font->utf_version = 1;
-    font->unicode_info_size = (256 * 4);
-    font->unicode_info = (unsigned char *)malloc(font->unicode_info_size);
-    if(!font->unicode_info) return 0;
 
-    int i, j = 0;
-    unsigned short *data = (unsigned short *)font->unicode_info;
-
-    for(i = 0; i < font->length; i++)
-    {
-        //data[j  ] = (unsigned short)i;
-        data[j  ] = default_unicode_table[i];
-        data[j+1] = 0xFFFF;
-        j += 2;
-    }
-
-    create_empty_unitab(font);
-    get_font_unicode_table(font);
-    //status_error("BDF is not fully supported yet");
-
-    return 1;
-}
-
-void bdf_kill_unitab(struct font_s *font)
-{
-    free_unicode_table(font);
-    font->unicode_info_size = 0;
-    if(font->unicode_info) free(font->unicode_info);
-    font->unicode_info = 0;
-    font->has_unicode_table = 0;
-}
-
-
-void bdf_handle_unicode_table_change(struct font_s *font, char old_has_unicode_table)
-{
-    /***********************/
-    /* remove unicode info */
-    /***********************/
-    if(!font->has_unicode_table)
-    {
-        bdf_kill_unitab(font);
-    }
-    else
-    {
-        if(!bdf_create_unitab(font)) font->has_unicode_table = 0;
-        //status_error("BDF is not fully supported yet");
-    }
-}
-
-
-void bdf_handle_version_change(struct font_s *font, char old_version)
+void bdf_handle_version_change(struct font_s *font, 
+                               char old_version __attribute__((unused)))
 {
     font->header_size = 0;
     if(font->file_hdr) free(font->file_hdr);
@@ -1140,10 +1097,10 @@ void bdf_init_module()
     bdf_module.expand_glyphs = bdf_expand_glyphs;
     bdf_module.update_font_hdr = NULL;
     bdf_module.handle_version_change = bdf_handle_version_change;
-    bdf_module.handle_unicode_table_change = bdf_handle_unicode_table_change;
+    bdf_module.handle_unicode_table_change = NULL; //bdf_handle_unicode_table_change;
     bdf_module.export_unitab = NULL; //bdf_export_unitab;
-    bdf_module.create_unitab = bdf_create_unitab;
-    bdf_module.kill_unitab = bdf_kill_unitab;
+    //bdf_module.create_unitab = NULL; //bdf_create_unitab;
+    //bdf_module.kill_unitab = NULL; //bdf_kill_unitab;
     bdf_module.convert_to_psf = bdf_convert_to_psf;
     bdf_module.is_acceptable_width = bdf_is_acceptable_width;
     bdf_module.next_acceptable_width = bdf_next_acceptable_width;

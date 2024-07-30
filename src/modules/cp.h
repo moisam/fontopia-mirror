@@ -74,7 +74,7 @@ void cp_kill_unitab(struct font_s *font);
 void cp_convert_to_psf(struct font_s *font);
 void cp_change_codepage(struct font_s *font);
 void cp_init_module();
-void cp_handle_unicode_table_change(struct font_s *font, char old_has_unicode_table);
+void cp_handle_unicode_table_change(struct font_s *font);
 
 //extern char *cp_files_prefix;
 extern int cp_files_count;

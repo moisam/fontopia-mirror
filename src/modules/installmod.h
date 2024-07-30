@@ -1,5 +1,5 @@
 /* 
- *    Copyright 2015, 2016, 2017, 2018 (c) Mohammed Isam Mohammed [mohammed_isam1984@yahoo.com]
+ *    Copyright 2015, 2016, 2017, 2018, 2024 (c) Mohammed Isam Mohammed [mohammed_isam1984@yahoo.com]
  * 
  *    file: installmod.h
  *    This file is part of fontopia.
@@ -35,7 +35,7 @@
 #include "pcf.h"
 
 /* 2- bump this macro by one. */
-#define INSTALLABLE_MODULES	5
+#define INSTALLABLE_MODULES         5
 
 /* 3- Add the name of your initializer function to the END of this list.
  *    The function should look like xxx_init_module().
@@ -44,13 +44,13 @@
  *          of psf module, as this module MUST be the first
  *          module on the system. Play with the others as you wish.
  */
-static void *init_module_func[INSTALLABLE_MODULES] =
-{ 
-  psf_init_module,
-  cp_init_module,
-  raw_init_module,
-  bdf_init_module,
-  pcf_init_module,
+static void (*init_module_func[])() =
+{
+    psf_init_module,
+    cp_init_module,
+    raw_init_module,
+    bdf_init_module,
+    pcf_init_module,
 };
 
 /* 4- Add a string to identify your module here.
@@ -58,9 +58,10 @@ static void *init_module_func[INSTALLABLE_MODULES] =
  */
 static char *module_version_str[] =
 {
-  "PSF1", "PSF2",
-  "CP",
-  "RAW",
-  "BDF",
-  "PCF",
+    "PSF1", "PSF2",
+    "CP",
+    "RAW",
+    "BDF",
+    "PCF",
 };
+
